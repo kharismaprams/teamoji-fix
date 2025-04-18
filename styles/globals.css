@@ -1,0 +1,201 @@
+/* styles/globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* Tambahkan font Tea Type */
+@font-face {
+  font-family: 'Tea Type';
+  src: url('/fonts/TeaType/TeaType-Regular.woff2') format('woff2'),
+       url('/fonts/TeaType/TeaType-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Pastikan font Poppins diterapkan secara global untuk body */
+body {
+  @apply text-gray-200 font-poppins antialiased;
+  font-family: 'Poppins', sans-serif; /* Fallback ke sans-serif */
+  padding-top: 80px; /* Beri padding supaya konten tidak tertutup header */
+  background: #0A1020; /* navy-950 */
+}
+
+/* Styling tombol primer */
+.btn-primary {
+  @apply bg-gradient-to-r from-cyan-400 to-lime-400 text-navy-900 font-semibold py-3 px-6 rounded-lg transition-all duration-300 ease-in-out;
+}
+
+.btn-primary:hover {
+  @apply bg-gradient-to-r from-cyan-300 to-lime-300 scale-105 shadow-lg shadow-cyan-400/50;
+}
+
+/* Styling tombol sekunder */
+.btn-secondary {
+  @apply border-2 border-cyan-400 text-cyan-400 font-semibold py-2 px-6 rounded-lg transition-all duration-300 ease-in-out;
+}
+
+.btn-secondary:hover {
+  @apply bg-cyan-400 text-navy-900 scale-105 shadow-lg shadow-cyan-400/50;
+}
+
+/* Styling card */
+.card {
+  @apply bg-navy-900 border border-cyan-400 rounded-lg p-6 transition-all duration-300 ease-in-out;
+}
+
+.card:hover {
+  @apply shadow-lg shadow-cyan-400/20 scale-[1.02];
+}
+
+/* Pastikan heading menggunakan font Tea Type untuk header, Poppins untuk lainnya */
+h1, h2, h3, h4, h5, h6 {
+  @apply font-bold text-gray-200;
+}
+
+/* Font Tea Type untuk header */
+.header-title {
+  font-family: 'Tea Type', 'Poppins', sans-serif;
+}
+
+/* Styling tombol RainbowKit */
+.rainbowkit-button {
+  @apply bg-gradient-to-r from-cyan-400 to-lime-400 text-navy-900 font-semibold py-2 px-4 rounded-lg transition-all duration-300 ease-in-out !important;
+}
+
+.rainbowkit-button:hover {
+  @apply bg-gradient-to-r from-cyan-300 to-lime-300 scale-105 shadow-lg shadow-cyan-400/50 !important;
+}
+
+/* Animasi untuk slideshow Featured NFTs */
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-slide {
+  display: flex;
+  animation: slide 20s linear infinite;
+}
+
+/* Styling untuk tombol kategori */
+.category-button {
+  @apply px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 ease-in-out;
+}
+
+.category-button:hover {
+  @apply scale-105 shadow-lg shadow-cyan-400/50;
+}
+
+/* Sembunyikan scrollbar tetapi tetap bisa discroll */
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Pastikan teks tidak terbalik */
+.text-normal {
+  direction: ltr;
+  text-align: center;
+}
+
+/* Styling header */
+.header {
+  @apply bg-gradient-to-r from-navy-950 to-navy-900 border-b-2 border-cyan-400 shadow-lg shadow-cyan-400/20;
+}
+
+/* Styling navbar */
+.navbar {
+  @apply flex items-center gap-6;
+}
+
+/* Styling link di navbar sebagai tombol */
+.nav-button {
+  @apply text-gray-200 text-lg font-bold bg-navy-900 border-2 border-cyan-400 rounded-lg px-4 py-2 transition-all duration-300 ease-in-out;
+  font-family: 'Tea Type', 'Poppins', sans-serif; /* Gunakan Tea Type untuk navbar */
+}
+
+.nav-button:hover {
+  @apply bg-cyan-400 text-navy-900 scale-105 shadow-lg shadow-cyan-400/50;
+}
+
+/* Styling logo dan banner di header */
+.header-logo {
+  @apply w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 border-lime-300;
+}
+
+.header-banner {
+  @apply w-32 h-12 sm:w-40 sm:h-16 rounded-full;
+}
+
+/* Styling untuk TabsTrigger */
+.tab-trigger {
+  @apply px-4 py-2 rounded-lg text-gray-200 transition-all duration-300 ease-in-out;
+}
+
+.tab-trigger:hover {
+  @apply bg-cyan-400 text-navy-900 scale-105;
+}
+
+.tab-trigger[data-state="active"] {
+  @apply bg-navy-900 text-lime-400 shadow-sm;
+}
+
+/* Efek hover untuk input */
+input, select {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+input:hover, select:hover {
+  @apply border-lime-400;
+}
+
+/* Styling untuk tombol di dalam tabs */
+.tab-button {
+  @apply relative z-30; /* Z-index lebih tinggi untuk pastikan tombol bisa diklik */
+}
+
+/* Pastikan TabsList tidak menutupi */
+.tab-list {
+  @apply relative z-10;
+}
+
+/* Pastikan TabsContent tidak tertutup */
+.tab-content {
+  @apply relative z-20;
+}
+
+/* Hapus animasi slide-up yang mungkin bermasalah */
+.animate-slide-up {
+  /* animation: slideUp 0.5s ease-in-out; */
+}
+
+/* Styling untuk modal */
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 pointer-events-auto; /* Ubah opacity menjadi lebih gelap dan pastikan pointer-events aktif */
+}
+
+.modal-content {
+  @apply card w-full max-w-lg relative;
+}
+
+.modal-close {
+  @apply absolute top-2 right-2 text-gray-200 hover:text-lime-400 text-xl;
+}

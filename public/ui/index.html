@@ -1,0 +1,377 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TEAMOJI - Collect Emoji NFTs</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #1A1A1A;
+      color: #fff;
+    }
+
+    nav {
+      background: #000;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #00FF00;
+    }
+
+    nav img {
+      height: 40px;
+    }
+
+    .connect-wallet {
+      background: #00FF00;
+      color: #000;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .connect-wallet:hover {
+      background: #FFFF00;
+    }
+
+    .hero {
+      background: url("Teamoji Banner.png") center/cover no-repeat;
+      position: relative;
+      padding: 1rem 1rem;
+      text-align: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 10px #00FF00;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      max-width: 36rem;
+      margin: 0 auto 2rem;
+      color: #FFFF00;
+    }
+
+    .btn-primary {
+      background: #00FF00;
+      color: #000;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-size: 1.125rem;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: #FFFF00;
+      box-shadow: 0 0 10px #FFFF00;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid #00FF00;
+      color: #00FF00;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      background: #00FF00;
+      color: #000;
+      box-shadow: 0 0 10px #00FF00;
+    }
+
+    .btn-link {
+      color: #FFFF00;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .btn-link:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      padding: 4rem 1rem;
+      text-align: center;
+    }
+
+    section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #fff;
+      text-shadow: 0 0 5px #00FF00;
+    }
+
+    section p {
+      color: #ccc;
+      font-size: 1.125rem;
+      max-width: 48rem;
+      margin: 0 auto 2rem;
+    }
+
+    .grid {
+      max-width: 64rem;
+      margin: 0 auto;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .grid.cols-3 {
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    }
+
+    .grid.cols-4 {
+      grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    }
+
+    .grid.cols-2 {
+      grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    }
+
+    .card {
+      border: 2px solid #00FF00;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      background: #222;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #00FF00;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #FFFF00;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #ccc;
+    }
+
+    .step-number {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #00FF00;
+    }
+
+    .bg-dark {
+      background: #222;
+    }
+
+    footer {
+      background: #000;
+      padding: 2rem 1rem;
+      text-align: center;
+      border-top: 2px solid #00FF00;
+    }
+
+    footer p {
+      color: #ccc;
+      margin-bottom: 1rem;
+    }
+
+    footer .links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    footer a {
+      color: #FFFF00;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+      }
+
+      section h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <a href="/">
+      <img src="logo.svg" alt="TEAMOJI Logo" />
+    </a>
+    <a href="#" class="connect-wallet">Connect Wallet</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Welcome to TEAMOJI 🎉</h1>
+      <p>Collect and mint your favorite emoji NFTs on Tea Sepolia Testnet!</p>
+      <a href="/mint" class="btn-primary">Start Minting 🚀</a>
+    </div>
+  </section>
+
+  <!-- Intro Section -->
+  <section>
+    <h2>What is TEAMOJI?</h2>
+    <p>
+      TEAMOJI is a decentralized platform on Tea Sepolia Testnet where you can mint, collect, and manage unique emoji NFTs. Support your favorite emojis, earn rewards, and join a vibrant community of collectors!
+    </p>
+    <a href="#learn-more" class="btn-secondary">Learn More</a>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="bg-dark">
+    <h2>How to Mint TEAMOJI NFTs</h2>
+    <div class="grid cols-3">
+      <div class="card">
+        <div class="step-number">1️⃣</div>
+        <h3>Search Emojis</h3>
+        <p>Use the TEAMOJI app to browse and filter emojis by category.</p>
+      </div>
+      <div class="card">
+        <div class="step-number">2️⃣</div>
+        <h3>Mint an Emoji</h3>
+        <p>Connect your wallet and mint your favorite emoji as an NFT.</p>
+      </div>
+      <div class="card">
+        <div class="step-number">3️⃣</div>
+        <h3>Collect & Earn</h3>
+        <p>Collect rare emojis and earn rewards in the TEAMOJI ecosystem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Categories Section -->
+  <section>
+    <h2>Supported Emoji Categories</h2>
+    <div class="grid cols-4">
+      <div class="card">Activities</div>
+      <div class="card">Animals</div>
+      <div class="card">Food</div>
+      <div class="card">Smileys</div>
+      <div class="card">Symbols</div>
+      <div class="card">Travel</div>
+      <div class="card">Objects</div>
+      <div class="card">Flags</div>
+    </div>
+    <p>...and more to come!</p>
+  </section>
+
+  <!-- Features Section -->
+  <section class="bg-dark">
+    <h2>Why TEAMOJI?</h2>
+    <div class="grid cols-2">
+      <div class="card">
+        <h3>For Collectors</h3>
+        <p>Discover and collect unique emoji NFTs. Show off your collection and trade with others.</p>
+        <a href="#learn-more" class="btn-link">Learn More</a>
+      </div>
+      <div class="card">
+        <h3>For Creators</h3>
+        <p>Create and mint your own emoji NFTs. Earn rewards based on their popularity.</p>
+        <a href="#learn-more" class="btn-link">Learn More</a>
+      </div>
+      <div class="card">
+        <h3>Decentralized Rewards</h3>
+        <p>TEAMOJI uses a proof-of-collection mechanism to reward users based on their activity.</p>
+        <a href="#learn-more" class="btn-link">Learn More</a>
+      </div>
+      <div class="card">
+        <h3>Tea Sepolia Testnet</h3>
+        <p>Built on Tea Sepolia Testnet, TEAMOJI ensures fast and secure NFT minting.</p>
+        <a href="#learn-more" class="btn-link">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <div class="max-w-3xl mx-auto space-y-6">
+      <div>
+        <h3 class="text-xl font-semibold text-yellow-400 mb-2">What is TEAMOJI?</h3>
+        <p class="text-gray-400">
+          TEAMOJI is a decentralized platform on Tea Sepolia Testnet for minting and collecting emoji NFTs in a fun and rewarding way.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold text-yellow-400 mb-2">How do I mint an NFT?</h3>
+        <p class="text-gray-400">
+          Connect your wallet, browse emojis, and mint your favorites with a small TEA fee.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold text-yellow-400 mb-2">What is the purpose of TEA in TEAMOJI?</h3>
+        <p class="text-gray-400">
+          TEA is used to mint NFTs and participate in the TEAMOJI ecosystem, including staking for rewards.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-xl font-semibold text-yellow-400 mb-2">When is the TEAMOJI Testnet live?</h3>
+        <p class="text-gray-400">
+          TEAMOJI Testnet is live now on Tea Sepolia Testnet!
+        </p>
+      </div>
+    </div>
+    <a href="#faqs" class="btn-link mt-4 inline-block">Read All FAQs</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© TEAMOJI Association. 2025.</p>
+    <div class="links">
+      <a href="#terms">Terms of Use</a>
+      <a href="#privacy">Privacy Policy</a>
+      <a href="#sitemap">Sitemap</a>
+      <a href="#learn">Learn About TEAMOJI</a>
+    </div>
+  </footer>
+</body>
+</html>
