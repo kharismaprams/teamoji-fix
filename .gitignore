@@ -1,9 +1,58 @@
-node_modules
-.next
-out
+# Node modules
+node_modules/
+
+# Next.js build output
+.next/
+out/
+
+# Log files
 *.log
+
+# macOS folder attributes
 .DS_Store
-.vercel
-.vs/
+.AppleDouble
+.LSOverride
+
+# Windows folder attributes
+Thumbs.db
+ehthumbs.db
+
+# IDE settings
+.vscode/
+.idea/
+.project
+.classpath
+.settings/
+
+# Environment variables files
 .env.local
 .env
+.env.production
+
+# Cache and coverage folders
+coverage/
+.yarn/
+dist/
+*.swp
+
+# Build directories
+build/
+public/
+
+# npm and yarn lock files
+package-lock.json
+yarn.lock
+
+# Netlify & Vercel files
+.vercel/
+.netlify/
+
+# Testing directories
+cypress/screenshots/
+cypress/videos/
+
+# Heroku files
+.heroku/
+
+# Miscellaneous
+.vs/

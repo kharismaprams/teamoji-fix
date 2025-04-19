@@ -13,18 +13,18 @@ interface ReadFunctionModalProps {
 }
 
 export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunctionModalProps) {
-  const [balanceOfAddress, setBalanceOfAddress] = useState("");
+  const [balanceOfAddress, setBalanceOfAddress] = useState<`0x${string}` | "">("");
   const [editionCounterString, setEditionCounterString] = useState("");
   const [getApprovedTokenId, setGetApprovedTokenId] = useState("");
-  const [getRoleAdminRole, setGetRoleAdminRole] = useState("");
-  const [hasRoleRole, setHasRoleRole] = useState("");
-  const [hasRoleAccount, setHasRoleAccount] = useState("");
-  const [isApprovedOwner, setIsApprovedOwner] = useState("");
-  const [isApprovedOperator, setIsApprovedOperator] = useState("");
-  const [mintCountAddress, setMintCountAddress] = useState("");
+  const [getRoleAdminRole, setGetRoleAdminRole] = useState<`0x${string}` | "">("");
+  const [hasRoleRole, setHasRoleRole] = useState<`0x${string}` | "">("");
+  const [hasRoleAccount, setHasRoleAccount] = useState<`0x${string}` | "">("");
+  const [isApprovedOwner, setIsApprovedOwner] = useState<`0x${string}` | "">("");
+  const [isApprovedOperator, setIsApprovedOperator] = useState<`0x${string}` | "">("");
+  const [mintCountAddress, setMintCountAddress] = useState<`0x${string}` | "">("");
   const [mintPricesString, setMintPricesString] = useState("");
   const [ownerOfTokenId, setOwnerOfTokenId] = useState("");
-  const [supportsInterfaceId, setSupportsInterfaceId] = useState("");
+  const [supportsInterfaceId, setSupportsInterfaceId] = useState<`0x${string}` | "">("");
   const [tokenURITokenId, setTokenURITokenId] = useState("");
 
   const { data: airdropRole } = useContractRead({
@@ -37,7 +37,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: teamojiAbi,
     functionName: "balanceOf",
-    args: [balanceOfAddress || "0x0000000000000000000000000000000000000000"],
+    args: [balanceOfAddress || ("0x0000000000000000000000000000000000000000" as `0x${string}`)],
     query: { enabled: !!balanceOfAddress && isAddress(balanceOfAddress) },
   });
 
@@ -79,7 +79,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: teamojiAbi,
     functionName: "getRoleAdmin",
-    args: [getRoleAdminRole || "0x00"],
+    args: [getRoleAdminRole || ("0x00" as `0x${string}`)],
     query: { enabled: !!getRoleAdminRole && isHex(getRoleAdminRole) },
   });
 
@@ -88,8 +88,8 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
     abi: teamojiAbi,
     functionName: "hasRole",
     args: [
-      hasRoleRole || "0x00",
-      hasRoleAccount || "0x0000000000000000000000000000000000000000",
+      hasRoleRole || ("0x00" as `0x${string}`),
+      hasRoleAccount || ("0x0000000000000000000000000000000000000000" as `0x${string}`),
     ],
     query: { enabled: !!hasRoleRole && !!hasRoleAccount && isAddress(hasRoleAccount) },
   });
@@ -99,8 +99,8 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
     abi: teamojiAbi,
     functionName: "isApprovedForAll",
     args: [
-      isApprovedOwner || "0x0000000000000000000000000000000000000000",
-      isApprovedOperator || "0x0000000000000000000000000000000000000000",
+      isApprovedOwner || ("0x0000000000000000000000000000000000000000" as `0x${string}`),
+      isApprovedOperator || ("0x0000000000000000000000000000000000000000" as `0x${string}`),
     ],
     query: {
       enabled: !!isApprovedOwner && !!isApprovedOperator && isAddress(isApprovedOwner) && isAddress(isApprovedOperator),
@@ -111,7 +111,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: teamojiAbi,
     functionName: "mintCount",
-    args: [mintCountAddress || "0x0000000000000000000000000000000000000000"],
+    args: [mintCountAddress || ("0x0000000000000000000000000000000000000000" as `0x${string}`)],
     query: { enabled: !!mintCountAddress && isAddress(mintCountAddress) },
   });
 
@@ -159,7 +159,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: teamojiAbi,
     functionName: "supportsInterface",
-    args: [supportsInterfaceId || "0x00"],
+    args: [supportsInterfaceId || ("0x00" as `0x${string}`)],
     query: { enabled: !!supportsInterfaceId },
   });
 
@@ -179,6 +179,15 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
 
   if (!modalOpen) return null;
 
+  // Fungsi untuk mengonversi data ke string dengan aman
+  const toSafeString = (data: any): string => {
+    if (data === null || data === undefined) return "Loading...";
+    if (typeof data === "bigint") return String(Number(data));
+    if (typeof data === "boolean") return String(data);
+    if (Array.isArray(data)) return data.map(item => toSafeString(item)).join(", ");
+    return String(data);
+  };
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000]"
@@ -191,7 +200,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
         {modalOpen === "AIRDROP_ROLE" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Airdrop Role</h3>
-            <p className="text-muted-foreground">{airdropRole || "Loading..."}</p>
+            <p className="text-muted-foreground">{toSafeString(airdropRole)}</p>
           </>
         )}
         {modalOpen === "balanceOf" && (
@@ -201,23 +210,23 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
               <Input
                 placeholder="Address (0x...)"
                 value={balanceOfAddress}
-                onChange={(e) => setBalanceOfAddress(e.target.value)}
+                onChange={(e) => setBalanceOfAddress(e.target.value as `0x${string}`)}
                 className="bg-card text-foreground border-border rounded-lg"
               />
-              <p className="text-muted-foreground">{balanceOf ? Number(balanceOf) : "Enter address..."}</p>
+              <p className="text-muted-foreground">{balanceOf !== undefined ? toSafeString(balanceOf) : "Enter address..."}</p>
             </div>
           </>
         )}
         {modalOpen === "DAO_ROLE" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">DAO Role</h3>
-            <p className="text-muted-foreground">{daoRole || "Loading..."}</p>
+            <p className="text-muted-foreground">{toSafeString(daoRole)}</p>
           </>
         )}
         {modalOpen === "DEFAULT_ADMIN_ROLE" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Default Admin Role</h3>
-            <p className="text-muted-foreground">{defaultAdminRole || "Loading..."}</p>
+            <p className="text-muted-foreground">{toSafeString(defaultAdminRole)}</p>
           </>
         )}
         {modalOpen === "editionCounter" && (
@@ -230,14 +239,14 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 onChange={(e) => setEditionCounterString(e.target.value)}
                 className="bg-card text-foreground border-border rounded-lg"
               />
-              <p className="text-muted-foreground">{editionCounter ? Number(editionCounter) : "Enter string..."}</p>
+              <p className="text-muted-foreground">{editionCounter !== undefined ? toSafeString(editionCounter) : "Enter string..."}</p>
             </div>
           </>
         )}
         {modalOpen === "FUSION_ROLE" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Fusion Role</h3>
-            <p className="text-muted-foreground">{fusionRole || "Loading..."}</p>
+            <p className="text-muted-foreground">{toSafeString(fusionRole)}</p>
           </>
         )}
         {modalOpen === "getApproved" && (
@@ -251,7 +260,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 type="number"
                 className="bg-card text-foreground border-border rounded-lg"
               />
-              <p className="text-muted-foreground">{getApproved || "Enter token ID..."}</p>
+              <p className="text-muted-foreground">{getApproved ? toSafeString(getApproved) : "Enter token ID..."}</p>
             </div>
           </>
         )}
@@ -262,10 +271,10 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
               <Input
                 placeholder="Role Hash (0x...)"
                 value={getRoleAdminRole}
-                onChange={(e) => setGetRoleAdminRole(e.target.value)}
+                onChange={(e) => setGetRoleAdminRole(e.target.value as `0x${string}`)}
                 className="bg-card text-foreground border-border rounded-lg"
               />
-              <p className="text-muted-foreground">{getRoleAdmin || "Enter role hash..."}</p>
+              <p className="text-muted-foreground">{getRoleAdmin ? toSafeString(getRoleAdmin) : "Enter role hash..."}</p>
             </div>
           </>
         )}
@@ -278,7 +287,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 <Input
                   placeholder="0x..."
                   value={hasRoleRole}
-                  onChange={(e) => setHasRoleRole(e.target.value)}
+                  onChange={(e) => setHasRoleRole(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
@@ -287,11 +296,11 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 <Input
                   placeholder="0x..."
                   value={hasRoleAccount}
-                  onChange={(e) => setHasRoleAccount(e.target.value)}
+                  onChange={(e) => setHasRoleAccount(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
-              <p className="text-muted-foreground">{hasRole !== undefined ? String(hasRole) : "Enter role and account..."}</p>
+              <p className="text-muted-foreground">{hasRole !== undefined ? toSafeString(hasRole) : "Enter role and account..."}</p>
             </div>
           </>
         )}
@@ -304,7 +313,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 <Input
                   placeholder="0x..."
                   value={isApprovedOwner}
-                  onChange={(e) => setIsApprovedOwner(e.target.value)}
+                  onChange={(e) => setIsApprovedOwner(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
@@ -313,11 +322,11 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 <Input
                   placeholder="0x..."
                   value={isApprovedOperator}
-                  onChange={(e) => setIsApprovedOperator(e.target.value)}
+                  onChange={(e) => setIsApprovedOperator(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
-              <p className="text-muted-foreground">{isApprovedForAll !== undefined ? String(isApprovedForAll) : "Enter addresses..."}</p>
+              <p className="text-muted-foreground">{isApprovedForAll !== undefined ? toSafeString(isApprovedForAll) : "Enter addresses..."}</p>
             </div>
           </>
         )}
@@ -330,11 +339,11 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 <Input
                   placeholder="0x..."
                   value={mintCountAddress}
-                  onChange={(e) => setMintCountAddress(e.target.value)}
+                  onChange={(e) => setMintCountAddress(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
-              <p className="text-muted-foreground">{mintCount ? Number(mintCount) : "Enter address..."}</p>
+              <p className="text-muted-foreground">{mintCount !== undefined ? toSafeString(mintCount) : "Enter address..."}</p>
             </div>
           </>
         )}
@@ -356,14 +365,14 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                   <option value="Legendary">Legendary</option>
                 </select>
               </div>
-              <p className="text-muted-foreground">{mintPrices ? Number(mintPrices) / 1e18 + " TEA" : "Select category..."}</p>
+              <p className="text-muted-foreground">{mintPrices !== undefined ? `${toSafeString(mintPrices / BigInt(1e18))} TEA` : "Select category..."}</p>
             </div>
           </>
         )}
         {modalOpen === "name" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Name</h3>
-            <p className="text-muted-foreground">{name || "Loading..."}</p>
+            <p className="text-muted-foreground">{name ? toSafeString(name) : "Loading..."}</p>
           </>
         )}
         {modalOpen === "ownerOf" && (
@@ -380,26 +389,26 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
-              <p className="text-muted-foreground">{ownerOf || "Enter token ID..."}</p>
+              <p className="text-muted-foreground">{ownerOf ? toSafeString(ownerOf) : "Enter token ID..."}</p>
             </div>
           </>
         )}
         {modalOpen === "PRICE_ROLE" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Price Role</h3>
-            <p className="text-muted-foreground">{priceRole || "Loading..."}</p>
+            <p className="text-muted-foreground">{priceRole ? toSafeString(priceRole) : "Loading..."}</p>
           </>
         )}
         {modalOpen === "seasonalActive" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Seasonal Active</h3>
-            <p className="text-muted-foreground">{seasonalActive !== undefined ? String(seasonalActive) : "Loading..."}</p>
+            <p className="text-muted-foreground">{seasonalActive !== undefined ? toSafeString(seasonalActive) : "Loading..."}</p>
           </>
         )}
         {modalOpen === "SEASONAL_ROLE" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Seasonal Role</h3>
-            <p className="text-muted-foreground">{seasonalRole || "Loading..."}</p>
+            <p className="text-muted-foreground">{seasonalRole ? toSafeString(seasonalRole) : "Loading..."}</p>
           </>
         )}
         {modalOpen === "supportsInterface" && (
@@ -411,18 +420,18 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                 <Input
                   placeholder="0x..."
                   value={supportsInterfaceId}
-                  onChange={(e) => setSupportsInterfaceId(e.target.value)}
+                  onChange={(e) => setSupportsInterfaceId(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
-              <p className="text-muted-foreground">{supportsInterface !== undefined ? String(supportsInterface) : "Enter interface ID..."}</p>
+              <p className="text-muted-foreground">{supportsInterface !== undefined ? toSafeString(supportsInterface) : "Enter interface ID..."}</p>
             </div>
           </>
         )}
         {modalOpen === "symbol" && (
           <>
             <h3 className="text-xl font-semibold mb-4 text-yellow-400">Symbol</h3>
-            <p className="text-muted-foreground">{symbol || "Loading..."}</p>
+            <p className="text-muted-foreground">{symbol ? toSafeString(symbol) : "Loading..."}</p>
           </>
         )}
         {modalOpen === "tokenURI" && (
@@ -439,7 +448,7 @@ export default function ReadFunctionModal({ modalOpen, setModalOpen }: ReadFunct
                   className="bg-card text-foreground border-border rounded-lg"
                 />
               </div>
-              <p className="text-muted-foreground">{tokenURI || "Enter token ID..."}</p>
+              <p className="text-muted-foreground">{tokenURI ? toSafeString(tokenURI) : "Enter token ID..."}</p>
             </div>
           </>
         )}

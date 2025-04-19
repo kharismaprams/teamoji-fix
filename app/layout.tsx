@@ -9,6 +9,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://teamoji.art"), // Ganti dengan URL production saat deploy, misalnya https://teamoji.com
   title: "TEAMOJI - Emoji NFT Collectibles",
   description: "Mint and manage your favorite emoji NFTs on Tea Sepolia Testnet",
   icons: {
@@ -18,6 +19,16 @@ export const metadata: Metadata = {
     title: "TEAMOJI",
     description: "Collect unique emoji NFTs on Tea Sepolia Testnet",
     images: ["/ui/Teamoji Banner.png"],
+    url: "https://teamoji.art", // Ganti dengan URL production
+    siteName: "TEAMOJI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TEAMOJI",
+    description: "Collect unique emoji NFTs on Tea Sepolia Testnet",
+    images: ["/ui/Teamoji Banner.png"],
+    creator: "@YKharismaPramS", // Ganti dengan handle Twitter-mu
   },
 };
 

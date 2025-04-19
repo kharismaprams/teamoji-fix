@@ -16,31 +16,31 @@ interface WriteFunctionModalProps {
 }
 
 export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFunctionModalProps) {
-  const [approveTo, setApproveTo] = useState("");
+  const [approveTo, setApproveTo] = useState<`0x${string}` | "">("");
   const [approveTokenId, setApproveTokenId] = useState("");
   const [endSeasonLoading, setEndSeasonLoading] = useState(false);
   const [fuseTokenId1, setFuseTokenId1] = useState("");
   const [fuseTokenId2, setFuseTokenId2] = useState("");
-  const [grantRoleRole, setGrantRoleRole] = useState("");
-  const [grantRoleAccount, setGrantRoleAccount] = useState("");
+  const [grantRoleRole, setGrantRoleRole] = useState<`0x${string}` | "">("");
+  const [grantRoleAccount, setGrantRoleAccount] = useState<`0x${string}` | "">("");
   const [proposeVoteDesc, setProposeVoteDesc] = useState("");
-  const [renounceRoleRole, setRenounceRoleRole] = useState("");
-  const [renounceRoleAccount, setRenounceRoleAccount] = useState("");
-  const [revokeRoleRole, setRevokeRoleRole] = useState("");
-  const [revokeRoleAccount, setRevokeRoleAccount] = useState("");
-  const [safeTransferFromAddr, setSafeTransferFromAddr] = useState("");
-  const [safeTransferTo, setSafeTransferTo] = useState("");
+  const [renounceRoleRole, setRenounceRoleRole] = useState<`0x${string}` | "">("");
+  const [renounceRoleAccount, setRenounceRoleAccount] = useState<`0x${string}` | "">("");
+  const [revokeRoleRole, setRevokeRoleRole] = useState<`0x${string}` | "">("");
+  const [revokeRoleAccount, setRevokeRoleAccount] = useState<`0x${string}` | "">("");
+  const [safeTransferFromAddr, setSafeTransferFromAddr] = useState<`0x${string}` | "">("");
+  const [safeTransferTo, setSafeTransferTo] = useState<`0x${string}` | "">("");
   const [safeTransferTokenId, setSafeTransferTokenId] = useState("");
-  const [safeTransferData, setSafeTransferData] = useState("");
-  const [setApprovalOperator, setSetApprovalOperator] = useState("");
+  const [safeTransferData, setSafeTransferData] = useState<`0x${string}` | "">("");
+  const [setApprovalOperator, setSetApprovalOperator] = useState<`0x${string}` | "">("");
   const [setApprovalApproved, setSetApprovalApproved] = useState("");
   const [startSeasonLoading, setStartSeasonLoading] = useState(false);
-  const [transferFromAddr, setTransferFromAddr] = useState("");
-  const [transferTo, setTransferTo] = useState("");
+  const [transferFromAddr, setTransferFromAddr] = useState<`0x${string}` | "">("");
+  const [transferTo, setTransferTo] = useState<`0x${string}` | "">("");
   const [transferTokenId, setTransferTokenId] = useState("");
   const [voteProposalId, setVoteProposalId] = useState("");
   const [voteSupport, setVoteSupport] = useState("");
-  const [withdrawTo, setWithdrawTo] = useState("");
+  const [withdrawTo, setWithdrawTo] = useState<`0x${string}` | "">("");
 
   const { writeContract: approve } = useWriteContract();
   const { writeContract: endSeason } = useWriteContract();
@@ -192,15 +192,26 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
     if (!isAddress(safeTransferTo)) return toast.error("Invalid to address");
     if (!safeTransferTokenId || isNaN(Number(safeTransferTokenId))) return toast.error("Invalid token ID");
     try {
-      const args = safeTransferData
-        ? [safeTransferFromAddr, safeTransferTo, BigInt(safeTransferTokenId), safeTransferData]
-        : [safeTransferFromAddr, safeTransferTo, BigInt(safeTransferTokenId)];
-      await safeTransfer({
+      const commonArgs = {
         address: contractAddress,
         abi: teamojiAbi,
-        functionName: "safeTransferFrom",
-        args,
-      });
+        functionName: "safeTransferFrom" as const,
+      };
+
+      if (safeTransferData) {
+        // Overload dengan 4 argumen (dengan data)
+        await safeTransfer({
+          ...commonArgs,
+          args: [safeTransferFromAddr, safeTransferTo, BigInt(safeTransferTokenId), safeTransferData] as const,
+        });
+      } else {
+        // Overload dengan 3 argumen (tanpa data)
+        await safeTransfer({
+          ...commonArgs,
+          args: [safeTransferFromAddr, safeTransferTo, BigInt(safeTransferTokenId)] as const,
+        });
+      }
+
       toast.success(`Transferred token ${safeTransferTokenId} to ${safeTransferTo.slice(0, 6)}...`);
       setSafeTransferFromAddr("");
       setSafeTransferTo("");
@@ -310,12 +321,12 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000] pointer-events-none">
       <div className="bg-navy-900 rounded-lg p-6 max-w-md w-full border-2 border-lime-300 shadow-lg animate-fade-in pointer-events-auto">
-      <button
-  onClick={() => setModalOpen(null)}
-  className="absolute top-3 right-3 text-white bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 flex items-center justify-center shadow-md"
->
-  <span className="text-lg leading-none">×</span>
-</button>
+        <button
+          onClick={() => setModalOpen(null)}
+          className="absolute top-3 right-3 text-white bg-red-600 hover:bg-red-700 rounded-full w-8 h-8 flex items-center justify-center shadow-md"
+        >
+          <span className="text-lg leading-none">×</span>
+        </button>
 
         {modalOpen === "airdrop" && (
           <>
@@ -344,7 +355,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={approveTo}
-                  onChange={(e) => setApproveTo(e.target.value)}
+                  onChange={(e) => setApproveTo(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -421,7 +432,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={grantRoleRole}
-                  onChange={(e) => setGrantRoleRole(e.target.value)}
+                  onChange={(e) => setGrantRoleRole(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -431,7 +442,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={grantRoleAccount}
-                  onChange={(e) => setGrantRoleAccount(e.target.value)}
+                  onChange={(e) => setGrantRoleAccount(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -471,7 +482,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={renounceRoleRole}
-                  onChange={(e) => setRenounceRoleRole(e.target.value)}
+                  onChange={(e) => setRenounceRoleRole(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -481,7 +492,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={renounceRoleAccount}
-                  onChange={(e) => setRenounceRoleAccount(e.target.value)}
+                  onChange={(e) => setRenounceRoleAccount(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -501,7 +512,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={revokeRoleRole}
-                  onChange={(e) => setRevokeRoleRole(e.target.value)}
+                  onChange={(e) => setRevokeRoleRole(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -511,7 +522,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={revokeRoleAccount}
-                  onChange={(e) => setRevokeRoleAccount(e.target.value)}
+                  onChange={(e) => setRevokeRoleAccount(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -531,7 +542,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={safeTransferFromAddr}
-                  onChange={(e) => setSafeTransferFromAddr(e.target.value)}
+                  onChange={(e) => setSafeTransferFromAddr(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -541,7 +552,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={safeTransferTo}
-                  onChange={(e) => setSafeTransferTo(e.target.value)}
+                  onChange={(e) => setSafeTransferTo(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -562,7 +573,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={safeTransferData}
-                  onChange={(e) => setSafeTransferData(e.target.value)}
+                  onChange={(e) => setSafeTransferData(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -582,7 +593,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={setApprovalOperator}
-                  onChange={(e) => setSetApprovalOperator(e.target.value)}
+                  onChange={(e) => setSetApprovalOperator(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -626,7 +637,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={transferFromAddr}
-                  onChange={(e) => setTransferFromAddr(e.target.value)}
+                  onChange={(e) => setTransferFromAddr(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -636,7 +647,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={transferTo}
-                  onChange={(e) => setTransferTo(e.target.value)}
+                  onChange={(e) => setTransferTo(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />
@@ -698,7 +709,7 @@ export default function WriteFunctionModal({ modalOpen, setModalOpen }: WriteFun
                 <Input
                   placeholder="0x..."
                   value={withdrawTo}
-                  onChange={(e) => setWithdrawTo(e.target.value)}
+                  onChange={(e) => setWithdrawTo(e.target.value as `0x${string}`)}
                   className="bg-card text-foreground border-border rounded-lg pointer-events-auto"
                   disabled={false}
                 />

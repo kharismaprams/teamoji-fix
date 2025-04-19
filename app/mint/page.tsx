@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -51,44 +51,40 @@ export default function MintPage() {
     chainId: 10218,
   });
 
-  const parsedEmojis = useMemo(() => {
-    return new Promise<Emoji[]>((resolve, reject) => {
-      fetch("/category_map.csv")
-        .then((response) => {
-          if (!response.ok) throw new Error("Failed to fetch CSV");
-          return response.text();
-        })
-        .then((csvText) => {
-          Papa.parse(csvText, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (result) => {
-              const emojis: Emoji[] = result.data.map((row: any) => {
-                const fileName = row.tokenURI.split("/").pop()?.replace(".json", "") || "";
-                const mintCount = row.category === "Smileys & Emotion" ? 50 : row.category === "Animals & Nature" ? 30 : 10;
-                return {
-                  name: row.name,
-                  category: row.category,
-                  tokenURI: row.tokenURI,
-                  image: `/emojis/${encodeURIComponent(fileName)}.svg`,
-                  mintCount,
-                };
-              });
-              resolve(emojis);
-            },
-            error: (error) => reject(error),
-          });
-        })
-        .catch((error) => reject(error));
-    });
-  }, []);
-
+  // Pindahkan logika pengambilan CSV ke useEffect (client-side)
   useEffect(() => {
     setIsLoadingEmojis(true);
-    parsedEmojis
-      .then((emojis) => {
-        setEmojis(emojis);
-        setIsLoadingEmojis(false);
+    fetch("/category_map.csv")
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to fetch CSV");
+        return response.text();
+      })
+      .then((csvText) => {
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (result) => {
+            const emojis: Emoji[] = result.data.map((row: any) => {
+              const fileName = row.tokenURI.split("/").pop()?.replace(".json", "") || "";
+              const mintCount = row.category === "Smileys & Emotion" ? 50 : row.category === "Animals & Nature" ? 30 : 10;
+              return {
+                name: row.name,
+                category: row.category,
+                tokenURI: row.tokenURI,
+                image: `/emojis/${encodeURIComponent(fileName)}.svg`,
+                mintCount,
+              };
+            });
+            setEmojis(emojis);
+            setIsLoadingEmojis(false);
+          },
+          error: (error: Error) => {
+            setEmojiError("Failed to load emoji data");
+            toast.error("Failed to load emoji data 🚨");
+            console.error(error);
+            setIsLoadingEmojis(false);
+          },
+        });
       })
       .catch((error) => {
         setEmojiError("Failed to load emoji data");
@@ -96,7 +92,7 @@ export default function MintPage() {
         console.error(error);
         setIsLoadingEmojis(false);
       });
-  }, [parsedEmojis]);
+  }, []); // Hapus parsedEmojis, langsung gunakan fetch di useEffect
 
   const { writeContractAsync, isPending: isMinting } = useWriteContract();
 
@@ -202,11 +198,8 @@ export default function MintPage() {
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-navy-950 to-navy-900">
-      {/* Header utama dari components/Header.tsx */}
       <Header />
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Slideshow Featured NFTs */}
         {featuredEmojis.length > 0 && (
           <div className="mb-12 relative overflow-hidden rounded-lg">
             <div className="flex animate-slide">
@@ -249,7 +242,6 @@ export default function MintPage() {
           </div>
         )}
 
-        {/* Top Minted NFTs Slider Manual */}
         {topMintedEmojis.length > 0 && (
           <div className="mb-12 relative overflow-hidden rounded-lg">
             <h2 className="text-3xl font-bold text-lime-400 mb-6 text-center text-normal">Top Minted NFTs 🔥</h2>
@@ -307,9 +299,7 @@ export default function MintPage() {
           </div>
         )}
 
-        {/* Filter, Search, dan Sort */}
         <div className="mb-8 w-full px-4">
-          {/* Tombol Kategori */}
           <div className="overflow-x-auto hide-scrollbar mb-4">
             <div className="flex justify-start sm:justify-center gap-2 w-max min-w-full">
               {categories.map((category) => (
@@ -326,7 +316,6 @@ export default function MintPage() {
             </div>
           </div>
 
-          {/* Filter Dropdown, Search, dan Sort */}
           <div className="flex flex-col sm:flex-row gap-4">
             <select
               className="card text-foreground border-cyan-400 p-2.5 w-full"
@@ -360,7 +349,6 @@ export default function MintPage() {
           </div>
         </div>
 
-        {/* Grid NFT */}
         {isLoadingEmojis ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin h-12 w-12 border-4 border-t-cyan-400 border-card rounded-full" />

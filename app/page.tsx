@@ -203,6 +203,10 @@ export default function Home() {
             <Link href="#privacy" className="text-lime-300 hover:underline">Privacy Policy</Link>
             <Link href="#sitemap" className="text-lime-300 hover:underline">Sitemap</Link>
             <Link href="#learn" className="text-lime-300 hover:underline">Learn About TEAMOJI</Link>
+            <p className="text-gray-400 mb-2">🪡 Follow Us:</p>
+            <Link href="https://x.com/themojinft" className="text-lime-300 hover:underline">Twitter / 𝕏 🐦</Link>
+            <Link href="https://discord.gg/BEnevQJgA6" className="text-lime-300 hover:underline">Discord 👣</Link>
+            <Link href="https://x.com/KharismaPramS" className="text-lime-300 hover:underline">𝕏 @KharismaPramS 👷‍♂️</Link>
           </div>
         </div>
       </footer>

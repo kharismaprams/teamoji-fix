@@ -10,7 +10,7 @@ export function RoleGuard({
   role,
   children,
 }: {
-  role: string;
+  role: `0x${string}`; // Ubah tipe dari string menjadi `0x${string}`
   children: React.ReactNode;
 }) {
   const { address, isConnected } = useAccount();

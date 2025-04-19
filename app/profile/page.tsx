@@ -42,6 +42,7 @@ export default function ProfilePage() {
     isFuser,
     isSeasonal,
     isPricer,
+    fetchCollection, // Sekarang tersedia dari hook
   } = useProfileState();
 
   const roles = [
@@ -59,9 +60,9 @@ export default function ProfilePage() {
     isDaoMember && { name: "Governance Pro", icon: "🗳️" },
   ].filter(Boolean) as { name: string; icon: string }[];
 
-  const fetchCollection = () => {
+  const handleFetchCollection = () => {
     setError(null);
-    useProfileState().fetchCollection();
+    fetchCollection(); // Sekarang bisa dipanggil
   };
 
   if (!isMounted) {
@@ -95,7 +96,7 @@ export default function ProfilePage() {
                 isFuser={isFuser}
                 isSeasonal={isSeasonal}
                 isPricer={isPricer}
-                collection={collection} // Pass collection
+                collection={collection}
               />
               <StatsGrid balance={balance} rolesLength={roles.length} />
               <RolesAndAchievements roles={roles} achievements={achievements} />
@@ -110,7 +111,7 @@ export default function ProfilePage() {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 itemsPerPage={itemsPerPage}
-                fetchCollection={fetchCollection}
+                fetchCollection={handleFetchCollection} // Ubah nama untuk konsistensi
               />
             </>
           ) : (

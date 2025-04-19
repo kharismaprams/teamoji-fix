@@ -8,25 +8,31 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { isAddress } from "viem";
 
+// Interface untuk role
+interface Role {
+  name: string;
+  hash: `0x${string}`; // Ubah tipe menjadi `0x${string}`
+}
+
 export default function RoleManager() {
-  const [searchAddress, setSearchAddress] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
+  const [searchAddress, setSearchAddress] = useState<`0x${string}` | "">(""); // Tambah tipe
+  const [selectedRole, setSelectedRole] = useState<`0x${string}` | "">(""); // Tambah tipe
   const { writeContract } = useWriteContract();
 
   const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
 
-  const roles = [
-    { name: "Default Admin", hash: "0x0000000000000000000000000000000000000000000000000000000000000000" },
-    { name: "Airdrop", hash: "0x3a2f235c9daaf33349d300aadff2f15078a89df81bcfdd45ba11c8f816bddc6f" },
-    { name: "DAO", hash: "0x3b5d4cc60d3ec3516ee8ae083bd60934f6eb2a6c54b1229985c41bfb092b2603" },
-    { name: "Fusion", hash: "0x0162673fc85f72b051e1428186e6dd466e6749dbeb311be16fe52c52aa87a678" },
-    { name: "Price", hash: "0xd4656a873938c6a54143cf99a88af3386da566bdef9cba62b37bbb4b88969b2d" },
-    { name: "Seasonal", hash: "0x591443068c3c8d65e4fdca989463f173ec47e69bbac35dcf2478ada6742c2ceb" },
+  const roles: Role[] = [
+    { name: "Default Admin", hash: "0x0000000000000000000000000000000000000000000000000000000000000000" as `0x${string}` },
+    { name: "Airdrop", hash: "0x3a2f235c9daaf33349d300aadff2f15078a89df81bcfdd45ba11c8f816bddc6f" as `0x${string}` },
+    { name: "DAO", hash: "0x3b5d4cc60d3ec3516ee8ae083bd60934f6eb2a6c54b1229985c41bfb092b2603" as `0x${string}` },
+    { name: "Fusion", hash: "0x0162673fc85f72b051e1428186e6dd466e6749dbeb311be16fe52c52aa87a678" as `0x${string}` },
+    { name: "Price", hash: "0xd4656a873938c6a54143cf99a88af3386da566bdef9cba62b37bbb4b88969b2d" as `0x${string}` },
+    { name: "Seasonal", hash: "0x591443068c3c8d65e4fdca989463f173ec47e69bbac35dcf2478ada6742c2ceb" as `0x${string}` },
   ];
 
-  const adminAddresses = [
-    "0xD21BE5C083ea4337B63b5BB939Ef0d5508feB3B3",
-    "0x6eDc1D1C5700c7BEAf771f88322caf65c0C0E3E3",
+  const adminAddresses: `0x${string}`[] = [
+    "0xD21BE5C083ea4337B63b5BB939Ef0d5508feB3B3" as `0x${string}`,
+    "0x6eDc1D1C5700c7BEAf771f88322caf65c0C0E3E3" as `0x${string}`,
   ];
 
   const roleStatus = adminAddresses.map((addr) => {
@@ -114,7 +120,7 @@ export default function RoleManager() {
           <label className="form-label text-foreground">Role</label>
           <select
             value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
+            onChange={(e) => setSelectedRole(e.target.value as `0x${string}`)} // Tambah tipe
             className="w-full rounded-md border border-border bg-card text-foreground px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
           >
             <option value="">Select a role</option>
@@ -130,7 +136,7 @@ export default function RoleManager() {
           <Input
             placeholder="0x..."
             value={searchAddress}
-            onChange={(e) => setSearchAddress(e.target.value)}
+            onChange={(e) => setSearchAddress(e.target.value as `0x${string}`)} // Tambah tipe
             className="bg-card text-foreground border-border rounded-lg"
           />
         </div>

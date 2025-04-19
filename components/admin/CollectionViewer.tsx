@@ -1,8 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useAccount, useContractRead, usePublicClient } from "wagmi";
 import { teamojiAbi } from "@/lib/contract";
+
+// Definisikan interface untuk props
+interface CollectionViewerProps {
+  show: boolean;
+  setShow: Dispatch<SetStateAction<boolean>>;
+}
 
 interface NFT {
   tokenId: bigint;
@@ -11,7 +17,7 @@ interface NFT {
   description?: string;
 }
 
-export default function CollectionViewer() {
+export default function CollectionViewer({ show, setShow }: CollectionViewerProps) {
   const { address, chain } = useAccount();
   const publicClient = usePublicClient();
   const [nfts, setNfts] = useState<NFT[]>([]);
@@ -36,6 +42,14 @@ export default function CollectionViewer() {
       console.log("Wallet address:", address);
       console.log("Chain ID:", chain?.id);
       console.log("Contract address:", process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
+
+      // Cek publicClient
+      if (!publicClient) {
+        setError("Public client not available. Please check your wallet connection.");
+        setLoading(false);
+        console.log("Public client not available");
+        return;
+      }
 
       // Cek network
       if (chain?.id !== 10218) {
@@ -240,6 +254,19 @@ export default function CollectionViewer() {
     fetchNFTs();
   }, [address, balance, publicClient, chain, balanceError]);
 
+  // Jika show=false, tampilkan tombol untuk set show=true
+  if (!show) {
+    return (
+      <button
+        onClick={() => setShow(true)}
+        className="btn-primary px-4 py-2 rounded-lg"
+      >
+        Show Collection
+      </button>
+    );
+  }
+
+  // Konten asli jika show=true
   if (loading) {
     return <p className="text-foreground">Loading your collection...</p>;
   }
@@ -267,6 +294,12 @@ export default function CollectionViewer() {
           {nft.description && <p className="text-muted-foreground">{nft.description}</p>}
         </div>
       ))}
+      <button
+        onClick={() => setShow(false)}
+        className="btn-primary px-4 py-2 rounded-lg mt-4"
+      >
+        Hide Collection
+      </button>
     </div>
   );
 }

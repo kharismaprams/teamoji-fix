@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useContractWrite } from "wagmi";
+import { useWriteContract } from "wagmi"; // Ganti useContractWrite ke useWriteContract
 import { toast } from "sonner";
 import { teamojiAbi } from "@/lib/contract";
 import { Input } from "@/components/ui/input";
@@ -19,17 +19,8 @@ export default function MintControl({ onSuccess }: MintControlProps) {
   const [setMintPriceCategory, setSetMintPriceCategory] = useState("");
   const [setMintPricePrice, setSetMintPricePrice] = useState("");
 
-  const { writeAsync: mint } = useContractWrite({
-    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
-    abi: teamojiAbi,
-    functionName: "mint",
-  });
-
-  const { writeAsync: setMintPrice } = useContractWrite({
-    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
-    abi: teamojiAbi,
-    functionName: "setMintPrice",
-  });
+  const { writeContractAsync: mint } = useWriteContract(); // Ganti writeAsync ke writeContractAsync
+  const { writeContractAsync: setMintPrice } = useWriteContract(); // Ganti writeAsync ke writeContractAsync
 
   const handleMint = async () => {
     if (!mintCategory) {
@@ -50,7 +41,13 @@ export default function MintControl({ onSuccess }: MintControlProps) {
       return;
     }
     try {
-      await mint({ args: [mintCategory, mintName, mintTokenURI], value: BigInt(valueNum * 1e18) });
+      await mint({
+        address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+        abi: teamojiAbi,
+        functionName: "mint",
+        args: [mintCategory, mintName, mintTokenURI],
+        value: BigInt(valueNum * 1e18),
+      });
       toast.success(`Minted ${mintName}`);
       setMintCategory("");
       setMintName("");
@@ -73,7 +70,12 @@ export default function MintControl({ onSuccess }: MintControlProps) {
       return;
     }
     try {
-      await setMintPrice({ args: [setMintPriceCategory, BigInt(priceNum * 1e18)] });
+      await setMintPrice({
+        address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+        abi: teamojiAbi,
+        functionName: "setMintPrice",
+        args: [setMintPriceCategory, BigInt(priceNum * 1e18)],
+      });
       toast.success(`Set ${setMintPriceCategory} price to ${priceNum} TEA`);
       setSetMintPriceCategory("");
       setSetMintPricePrice("");

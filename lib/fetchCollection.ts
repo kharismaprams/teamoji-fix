@@ -1,23 +1,24 @@
 import { teamojiAbi } from "@/lib/contract";
-import { PublicClient } from "wagmi";
+import { PublicClient } from "viem";
+
+// Pindahkan interface ke luar fungsi dan ekspor
+export interface CollectionItem {
+  tokenId: bigint;
+  name: string;
+  image: string;
+  description?: string;
+  category?: string;
+}
 
 export const fetchCollection = async (
   address: string | undefined,
   balance: bigint | undefined,
   chain: { id: number } | undefined,
-  publicClient: PublicClient,
+  publicClient: PublicClient | undefined,
   setCollection: (items: CollectionItem[]) => void,
   setIsLoading: (loading: boolean) => void,
   setError: (error: string | null) => void
 ) => {
-  interface CollectionItem {
-    tokenId: bigint;
-    name: string;
-    image: string;
-    description?: string;
-    category?: string;
-  }
-
   const hardcodedTokenIds = [3, 5, 6, 7, 8, 9, 20, 21, 22].map(BigInt);
 
   console.log("Starting fetchCollection...");
@@ -48,6 +49,14 @@ export const fetchCollection = async (
     return;
   }
 
+  if (!publicClient) {
+    setError("Public client not available. Please try again.");
+    setCollection([]);
+    setIsLoading(false);
+    console.log("Public client not available");
+    return;
+  }
+
   try {
     setIsLoading(true);
     setError(null);
@@ -66,10 +75,10 @@ export const fetchCollection = async (
           type: "event",
           name: "Transfer",
           inputs: [
-            { type: "address", "name": "from", "indexed": true },
-            { type: "address", "name": "to", "indexed": true },
-            { type: "uint256", "name": "tokenId", "indexed": true }
-          ]
+            { type: "address", name: "from", indexed: true },
+            { type: "address", name: "to", indexed: true },
+            { type: "uint256", name: "tokenId", indexed: true },
+          ],
         },
         fromBlock: BigInt(0),
         toBlock: "latest",
@@ -141,7 +150,6 @@ export const fetchCollection = async (
             imageUrl = metadata.image || "/emojis/placeholder.svg";
             name = metadata.name || name;
             description = metadata.description || "";
-            // Ambil kategori dari attributes, case-insensitive
             category = metadata.category || metadata.type || metadata.collection || "";
             if (metadata.attributes) {
               const categoryAttr = metadata.attributes.find((attr: any) =>
@@ -155,7 +163,7 @@ export const fetchCollection = async (
             console.log(`Category for tokenId ${tokenId}:`, category);
             if (!category) {
               console.warn(`No category found for tokenId ${tokenId}, metadata:`, metadata);
-              category = "Unknown"; // Fallback sementara
+              category = "Unknown";
             }
 
             if (imageUrl.startsWith("ipfs://")) {

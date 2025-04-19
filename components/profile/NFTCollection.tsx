@@ -142,7 +142,7 @@ export const NFTCollection = ({
           {totalPages > 1 && (
             <div className="flex justify-center mt-6 gap-2 items-center">
               <Button
-                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                 disabled={currentPage === 1}
                 className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4"
               >
@@ -152,7 +152,7 @@ export const NFTCollection = ({
                 Page {currentPage} of {totalPages}
               </span>
               <Button
-                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
                 disabled={currentPage === totalPages}
                 className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4"
               >

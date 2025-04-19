@@ -27,11 +27,18 @@ export default function ContractStats() {
 
   const fetchContractBalance = async () => {
     try {
+      // Cek apakah publicClient ada
+      if (!publicClient) {
+        console.error("Public client not available");
+        return "0";
+      }
+
       const balance = await publicClient.getBalance({
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
       });
       return formatEther(balance);
     } catch (error) {
+      console.error("Error fetching contract balance:", error);
       return "0";
     }
   };

@@ -17,6 +17,13 @@ interface HeroSectionProps {
   handleChangeProfilePicture: (src: string) => void;
   balance: bigint | undefined;
   collection: CollectionItem[];
+  // Tambah props yang hilang
+  isAdmin: boolean | undefined;
+  isDaoMember: boolean | undefined;
+  isAirdropper: boolean | undefined;
+  isFuser: boolean | undefined;
+  isSeasonal: boolean | undefined;
+  isPricer: boolean | undefined;
 }
 
 interface CollectionItem {
@@ -42,8 +49,16 @@ export const HeroSection = ({
   handleChangeProfilePicture,
   balance,
   collection,
+  // Tambah props ke destructure (meskipun tidak digunakan)
+  isAdmin,
+  isDaoMember,
+  isAirdropper,
+  isFuser,
+  isSeasonal,
+  isPricer,
 }: HeroSectionProps) => {
-  const shareUrl = `https://x.com/intent/tweet?text=Check%20out%20my%20TEAMOJI%20profile!%20${address}%20%F0%9F%8E%89%20Join%20at%20teamoji.com`;
+  const shareUrl = `https://x.com/intent/tweet?text=Check%20out%20my%20TEAMOJI%20profile!%20${address}%20%F0%9F%8E%89%20Join%20at%20teamoji.art%20%F0%9F%8E%89%20%40themojinft%20%40KharismaPramS
+%20%F0%9F%8E%89`;
   const explorerUrl = `https://sepolia.tea.xyz/address/${address}`; // Placeholder
 
   // State untuk slideshow
@@ -175,9 +190,9 @@ export const HeroSection = ({
         >
           Copy Address 📋
         </Button>
-        <Link href="/mint">
+        <Link href="https://discord.gg/BEnevQJgA6">
           <Button className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4">
-            Mint NFT 🖼️
+          Discord 🏘️ 
           </Button>
         </Link>
         <Button

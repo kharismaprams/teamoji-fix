@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAccount, useContractRead, usePublicClient } from "wagmi";
 import { toast } from "sonner";
-import { fetchCollection } from "@/lib/fetchCollection";
+import { fetchCollection, CollectionItem } from "@/lib/fetchCollection"; // Impor tipe CollectionItem
 import { teamojiAbi } from "@/lib/contract";
 import { DEFAULT_ADMIN_ROLE, DAO_ROLE, AIRDROP_ROLE, FUSION_ROLE, SEASONAL_ROLE, PRICE_ROLE } from "@/lib/roles";
 
@@ -19,11 +19,9 @@ export const useProfileState = () => {
   const [isMounted, setIsMounted] = useState(false);
   const itemsPerPage = 8;
 
-  // State untuk foto profil
   const [profilePicture, setProfilePicture] = useState("/emojis/emoji_rocket_1.svg");
   const [showProfileOptions, setShowProfileOptions] = useState(false);
 
-  // Daftar 20 opsi gambar profil yang ada di public/emojis
   const profilePictureOptions = [
     { name: "Rocket", src: "/emojis/emoji_rocket_1.svg" },
     { name: "Star", src: "/emojis/emoji_star_1.svg" },
@@ -47,12 +45,10 @@ export const useProfileState = () => {
     { name: "Smiling Face", src: "/emojis/emoji_smiling_face_with_hearts_1.svg" },
   ];
 
-  // Handle client-side mounting
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Load bio dan foto profil dari localStorage
   useEffect(() => {
     if (address) {
       const savedBio = localStorage.getItem(`teamoji_bio_${address}`);
@@ -63,7 +59,6 @@ export const useProfileState = () => {
     }
   }, [address]);
 
-  // Query balance
   const { data: balance, error: balanceError } = useContractRead({
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: teamojiAbi,
@@ -72,7 +67,6 @@ export const useProfileState = () => {
     query: { enabled: !!address },
   });
 
-  // Query roles
   const { data: isAdmin } = useContractRead({
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: teamojiAbi,
@@ -121,9 +115,8 @@ export const useProfileState = () => {
     query: { enabled: !!address },
   });
 
-  // Fetch collection
   useEffect(() => {
-    if (isMounted) {
+    if (isMounted && publicClient) {
       fetchCollection(
         address,
         balance,
@@ -134,9 +127,8 @@ export const useProfileState = () => {
         setError
       );
     }
-  }, [address, balance, publicClient, isMounted, balanceError]);
+  }, [address, balance, chain, publicClient, isMounted, balanceError]);
 
-  // Save bio to localStorage
   const handleSaveBio = () => {
     if (address && bio) {
       localStorage.setItem(`teamoji_bio_${address}`, bio);
@@ -145,7 +137,6 @@ export const useProfileState = () => {
     setIsEditingBio(false);
   };
 
-  // Copy wallet address
   const handleCopyAddress = () => {
     if (address) {
       navigator.clipboard.writeText(address).then(() => {
@@ -157,7 +148,6 @@ export const useProfileState = () => {
     }
   };
 
-  // Simpan foto profil ke localStorage
   const handleChangeProfilePicture = (src: string) => {
     setProfilePicture(src);
     if (address) {
@@ -165,6 +155,21 @@ export const useProfileState = () => {
     }
     setShowProfileOptions(false);
     toast.success("Profile picture updated!");
+  };
+
+  // Ekspos fetchCollection sebagai fungsi
+  const fetchCollectionFunc = () => {
+    if (publicClient) {
+      fetchCollection(
+        address,
+        balance,
+        chain,
+        publicClient,
+        setCollection,
+        setIsLoading,
+        setError
+      );
+    }
   };
 
   return {
@@ -200,5 +205,6 @@ export const useProfileState = () => {
     isFuser,
     isSeasonal,
     isPricer,
+    fetchCollection: fetchCollectionFunc,
   };
 };
