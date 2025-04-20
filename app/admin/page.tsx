@@ -68,9 +68,9 @@ export default function AdminDashboard() {
     return (
       <div className="text-center py-12">
         <p className="text-lg text-muted-foreground mb-4">
-          Please connect your wallet to access the admin panel.
+          Please connect your wallet to access the admin panel. 👻
         </p>
-        <Button className="btn-primary">Connect Wallet</Button>
+        <Button className="btn-primary">🤖 ?????? Go, please. 🥷🏼</Button>
       </div>
     );
   }
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
     return (
       <div className="text-center py-12">
         <p className="text-lg text-destructive mb-4">
-          You do not have admin access.
+          Opppss... ☠️ You do not have admin access. 🕵
         </p>
       </div>
     );
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
           />
           <div className="text-center sm:text-left">
             <h1 className="text-3xl sm:text-4xl font-bold text-yellow-400">
-              TEAMOJI Admin Dashboard
+              TEAMOJI Admin Dashboard🛠️
             </h1>
             <p className="text-lg text-muted-foreground mt-2">
               {address.slice(0, 6)}...{address.slice(-4)} | Admin Active

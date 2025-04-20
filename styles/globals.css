@@ -1,5 +1,5 @@
-/* styles/globals.css */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
 /* Tambahkan font Tea Type */
 @font-face {
@@ -133,7 +133,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .nav-button:hover {
-  @apply bg-cyan-400 text-navy-900 scale-105 shadow-lg shadow-cyan-400/50;
+  @apply bg-cyan-400 text-navy-950 scale-105 shadow-lg shadow-cyan-400/50;
 }
 
 /* Styling logo dan banner di header */
@@ -198,4 +198,377 @@ input:hover, select:hover {
 
 .modal-close {
   @apply absolute top-2 right-2 text-gray-200 hover:text-lime-400 text-xl;
+}
+
+/* Animasi gradient untuk footer */
+@keyframes footerGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-footer-gradient {
+  background: linear-gradient(45deg, #0A1020, #1e2a44, #0A1020);
+  background-size: 200% 200%;
+  animation: footerGradient 8s ease infinite;
+}
+
+/* Efek neon glow untuk link footer */
+.neon-glow {
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5), 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.neon-glow:hover {
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+/* Efek neon glow untuk logo sosial media */
+.neon-glow-social {
+  filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+}
+
+.neon-glow-social:hover {
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8)) drop-shadow(0 0 20px rgba(0, 255, 255, 0.5));
+}
+
+/* Styling untuk link sosial media */
+.social-icon-link {
+  @apply flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-navy-900 border-2 border-cyan-400 transition-all duration-300;
+}
+
+.social-icon-link:hover {
+  @apply bg-cyan-400 border-lime-300 scale-110;
+}
+
+/* Animasi untuk sticky PFP dan address */
+.sticky-pfp-address {
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 640px) {
+  .sticky-pfp-address.sticky {
+    position: fixed;
+    top: 80px; /* Offset untuk header */
+    left: 16px; /* Sesuaikan padding hero-section */
+    right: 16px; /* Sesuaikan padding hero-section */
+    background: #0A1020; /* navy-950 */
+    padding: 1rem;
+    z-index: 50;
+    box-shadow: 0 2px 10px rgba(0, 255, 255, 0.2);
+    border-bottom: 2px solid #00FFFF;
+    border-radius: 8px; /* Sesuaikan dengan card */
+  }
+}
+
+/* Enhance neon glow untuk roles tags */
+.tag-neon {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tag-neon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5), 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+/* Animasi untuk filter/sort buttons */
+.filter-neon {
+  transition: all 0.3s ease;
+}
+
+.filter-neon:hover, .filter-neon:focus {
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  border-color: #00FFFF;
+}
+
+/* Efek Mengkilau untuk Hero */
+.hero-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-shine::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  animation: shine 6s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    transform: rotate(45deg) translateX(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateX(100%);
+  }
+}
+
+/* Font Techy untuk Judul Hero */
+.font-techy {
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Border Neon untuk Konten Hero */
+.neon-border {
+  border: 2px solid #b2f57b; /* lime-300 */
+  box-shadow: 0 0 10px rgba(178, 245, 123, 0.5);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+/* Pulsing Effect untuk Button */
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Partikel Emoji untuk Hero */
+.animate-particle {
+  animation: fall 5s linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* Animasi Titik-titik Melayang untuk About Section */
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+}
+
+/* Efek Glowing untuk Lingkaran Tengah */
+.glow {
+  box-shadow: 0 0 20px rgba(178, 245, 123, 0.5), 0 0 40px rgba(0, 255, 255, 0.3);
+}
+
+/* Efek Glowing untuk Emoji */
+.glow-emoji {
+  text-shadow: 0 0 8px rgba(178, 245, 123, 0.8), 0 0 16px rgba(0, 255, 255, 0.5);
+}
+
+/* Animasi Float untuk Emoji */
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+}
+
+/* Responsivitas untuk Label Kategori */
+.category-label {
+  transform: translate(var(--x-md), var(--y-md));
+}
+
+@media (max-width: 768px) {
+  .category-label {
+    transform: translate(var(--x), var(--y));
+  }
+}
+
+/* Responsivitas untuk Intro Section */
+@media (max-width: 768px) {
+  .max-w-7xl {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .md\:flex-row {
+    flex-direction: column;
+  }
+
+  .md\:text-left {
+    text-align: center;
+  }
+
+  .md\:justify-start {
+    justify-content: center;
+  }
+
+  .md\:space-x-10 {
+    margin-top: 2.5rem;
+  }
+
+  .md\:w-1\/2 {
+    width: 100%;
+  }
+
+  .h-80 {
+    height: 18rem; /* Lebih kecil di mobile */
+  }
+
+  .md\:h-96 {
+    height: 18rem; /* Sesuaikan tinggi grafik */
+  }
+
+  .w-64 {
+    width: 16rem; /* Lingkaran orbit lebih kecil di mobile */
+  }
+
+  .h-64 {
+    height: 16rem;
+  }
+
+  .md\:w-80 {
+    width: 16rem;
+  }
+
+  .md\:h-80 {
+    height: 16rem;
+  }
+
+  .text-4xl {
+    font-size: 2rem; /* Judul lebih kecil di mobile */
+  }
+
+  .md\:text-5xl {
+    font-size: 2.5rem;
+  }
+
+  .text-lg {
+    font-size: 1rem; /* Paragraf lebih kecil di mobile */
+  }
+
+  .md\:text-xl {
+    font-size: 1.125rem;
+  }
+
+  .text-md {
+    font-size: 0.875rem;
+  }
+
+  .md\:text-lg {
+    font-size: 1rem;
+  }
+
+  .text-5xl {
+    font-size: 2.5rem; /* Emoji lebih kecil di mobile */
+  }
+}
+
+/* Mencegah horizontal overflow di semua device */
+html, body {
+  width: 100%;
+  overflow-x: hidden; /* Pastikan gak bisa scroll kanan-kiri */
+}
+
+/* Pastikan section gak overflow di mobile */
+section {
+  overflow-x: hidden;
+}
+
+/* Navbar di mobile harus wrap dan gak overflow */
+.navbar {
+  flex-wrap: wrap; /* Tombol navbar wrap kalau gak muat */
+}
+
+/* Khusus untuk mobile, batasi elemen di Hero.tsx dan About.tsx */
+@media (max-width: 640px) {
+  /* Pastikan container di mobile gak overflow */
+  .container, .max-w-7xl {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Batasi lebar elemen absolut di About.tsx */
+  .category-label, .glow-emoji {
+    white-space: nowrap; /* Pastikan teks gak wrap dan overflow */
+  }
+
+  /* Pastikan partikel di Hero.tsx gak keluar viewport */
+  .animate-particle {
+    left: clamp(0%, calc(100% * ${particle.left / 100}), 100%); /* Batasi posisi */
+  }
+
+  /* Footer di mobile */
+  .animate-footer-gradient {
+    overflow-x: hidden;
+  }
+
+  /* Pastikan tombol toggle footer gak bikin overflow */
+  .sm\:hidden {
+    max-width: 100%;
+  }
+
+  /* Pastikan konten footer wrap dengan baik */
+  .flex-col.sm\:flex-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* Efek neon glow tambahan untuk FAQ */
+.faq-card-glow {
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+}
+
+.faq-card-glow:hover {
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.5);
+}
+
+/* Animasi untuk FAQ content saat expand */
+.faq-content-slide {
+  animation: slideDown 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -4,7 +4,6 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useAccount, useContractRead, usePublicClient } from "wagmi";
 import { teamojiAbi } from "@/lib/contract";
 
-// Definisikan interface untuk props
 interface CollectionViewerProps {
   show: boolean;
   setShow: Dispatch<SetStateAction<boolean>>;
@@ -24,10 +23,9 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Hardcoded Token IDs yang kita tau (sementara)
-  const hardcodedTokenIds = [3, 5, 6, 7, 8, 9, 20, 21, 22].map(BigInt);
+  // Hardcoded Token IDs diganti jadi rentang 1-1000 (bisa diubah)
+  const hardcodedTokenIds = Array.from({ length: 1000 }, (_, i) => BigInt(i + 1));
 
-  // Ambil jumlah NFT yang dimiliki user
   const { data: balance, error: balanceError } = useContractRead({
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
     abi: teamojiAbi,
@@ -43,33 +41,29 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
       console.log("Chain ID:", chain?.id);
       console.log("Contract address:", process.env.NEXT_PUBLIC_CONTRACT_ADDRESS);
 
-      // Cek publicClient
       if (!publicClient) {
-        setError("Public client not available. Please check your wallet connection.");
+        setError("Public client tidak tersedia. Cek koneksi wallet.");
         setLoading(false);
-        console.log("Public client not available");
+        console.log("Public client tidak tersedia");
         return;
       }
 
-      // Cek network
       if (chain?.id !== 10218) {
-        setError("Wrong network. Please switch to Tea Sepolia (Chain ID: 10218).");
+        setError("Jaringan salah. Pindah ke Tea Sepolia (Chain ID: 10218).");
         setLoading(false);
-        console.log("Wrong network detected:", chain?.id);
+        console.log("Jaringan salah:", chain?.id);
         return;
       }
 
-      // Cek wallet
       if (!address) {
-        setError("Please connect your wallet.");
+        setError("Hubungkan wallet dulu.");
         setLoading(false);
-        console.log("No wallet address connected");
+        console.log("Wallet tidak terhubung");
         return;
       }
 
-      // Cek balance error
       if (balanceError) {
-        setError(`Failed to fetch balance: ${balanceError.message}`);
+        setError(`Gagal ambil balance: ${balanceError.message}`);
         setLoading(false);
         console.error("Balance error:", balanceError);
         return;
@@ -82,7 +76,7 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
         setNfts([]);
         setError(null);
         setLoading(false);
-        console.log("No NFTs to fetch: balance is 0");
+        console.log("Tidak ada NFT untuk diambil: balance 0");
         return;
       }
 
@@ -92,10 +86,11 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
         const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
         const items: NFT[] = [];
 
-        // Karena tokenOfOwnerByIndex nggak ada, kita coba query event Transfer
+        // Coba ambil event Transfer
         let tokenIds: bigint[] = [];
         try {
-          console.log(`Fetching Transfer events for address ${address}...`);
+          console.log(`Mengambil event Transfer untuk address ${address}...`);
+          const latestBlock = await publicClient.getBlockNumber();
           const logs = await publicClient.getLogs({
             address: contractAddress,
             event: {
@@ -108,12 +103,11 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
               ],
             },
             fromBlock: BigInt(0),
-            toBlock: "latest",
+            toBlock: latestBlock,
           });
 
           console.log("Transfer logs:", logs);
 
-          // Filter Transfer events where 'to' atau 'from' adalah address user
           const userTokenIds = new Set<bigint>();
           for (const log of logs) {
             const { from, to, tokenId } = log.args as { from: string; to: string; tokenId: bigint };
@@ -126,18 +120,18 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
           }
 
           tokenIds = Array.from(userTokenIds);
-          console.log("Token IDs from Transfer events:", tokenIds);
+          console.log("Token IDs dari event Transfer:", tokenIds);
         } catch (e) {
-          console.error("Error fetching Transfer events:", e);
-          // Fallback ke hardcoded Token IDs
-          tokenIds = hardcodedTokenIds;
+          console.error("Error mengambil event Transfer:", e);
+          // Fallback ke rentang ID
+          tokenIds = hardcodedTokenIds.slice(0, balanceNum); // Batasi sesuai balance
           console.log("Falling back to hardcoded Token IDs:", tokenIds);
         }
 
         if (tokenIds.length === 0) {
-          setError("No Token IDs found for this address.");
+          setError("Tidak ada Token ID ditemukan untuk address ini.");
           setLoading(false);
-          console.log("No Token IDs found");
+          console.log("Tidak ada Token ID ditemukan");
           return;
         }
 
@@ -148,55 +142,39 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
           let imageUrl = `/emojis/placeholder.svg`;
           let description = "";
 
-          // Panggil tokenURI dari smart contract
           let tokenURI: string | undefined;
           try {
-            console.log(`Fetching tokenURI for tokenId ${tokenIdStr}`);
+            console.log(`Mengambil tokenURI untuk tokenId ${tokenIdStr}`);
             tokenURI = await publicClient.readContract({
               address: contractAddress,
               abi: teamojiAbi,
               functionName: "tokenURI",
               args: [tokenId],
             });
-            console.log(`tokenURI for tokenId ${tokenIdStr}:`, tokenURI);
+            console.log(`tokenURI untuk tokenId ${tokenIdStr}:`, tokenURI);
           } catch (e) {
-            console.error(`Error fetching tokenURI for tokenId ${tokenIdStr}:`, e);
-            items.push({
-              tokenId,
-              name,
-              image: imageUrl,
-              description,
-            });
-            continue;
+            console.error(`Error mengambil tokenURI untuk tokenId ${tokenIdStr}:`, e);
+            continue; // Skip kalau tokenURI gagal
           }
 
-          // Cek format tokenURI
           if (typeof tokenURI !== "string" || !tokenURI) {
-            console.warn(`Invalid tokenURI for tokenId ${tokenIdStr}:`, tokenURI);
-            items.push({
-              tokenId,
-              name,
-              image: imageUrl,
-              description,
-            });
+            console.warn(`tokenURI tidak valid untuk tokenId ${tokenIdStr}:`, tokenURI);
             continue;
           }
 
           try {
-            // Coba fetch tokenURI
-            console.log(`Fetching metadata from: ${tokenURI}`);
-            const response = await fetch(tokenURI);
+            console.log(`Mengambil metadata dari: ${tokenURI}`);
+            const response = await fetch(tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/"));
             if (!response.ok) {
-              throw new Error(`Failed to fetch: ${response.statusText}`);
+              throw new Error(`Gagal fetch: ${response.statusText}`);
             }
 
             const contentType = response.headers.get("content-type");
-            console.log(`Content-Type for tokenURI ${tokenURI}:`, contentType);
+            console.log(`Content-Type untuk tokenURI ${tokenURI}:`, contentType);
 
-            // Kalau JSON metadata
             if (contentType?.includes("application/json")) {
               const metadata = await response.json();
-              console.log(`Metadata for tokenId ${tokenIdStr}:`, metadata);
+              console.log(`Metadata untuk tokenId ${tokenIdStr}:`, metadata);
 
               imageUrl = metadata.image || `/emojis/placeholder.svg`;
               name = metadata.name || name;
@@ -205,26 +183,19 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
               if (imageUrl.startsWith("ipfs://")) {
                 imageUrl = imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
               }
-            }
-            // Kalau langsung gambar (SVG, PNG, dll.)
-            else if (contentType?.includes("image")) {
-              imageUrl = tokenURI;
+            } else if (contentType?.includes("image")) {
+              imageUrl = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
             } else {
-              console.warn(`Unexpected content-type for tokenId ${tokenIdStr}:`, contentType);
+              console.warn(`Content-type tidak dikenal untuk tokenId ${tokenIdStr}:`, contentType);
               imageUrl = `/emojis/placeholder.svg`;
             }
           } catch (e) {
-            console.error(`Error fetching metadata for tokenId ${tokenIdStr}:`, e);
-            // Coba fallback: anggap tokenURI adalah link gambar langsung
-            try {
-              if (tokenURI.startsWith("http") || tokenURI.startsWith("ipfs://")) {
-                imageUrl = tokenURI.startsWith("ipfs://")
-                  ? tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
-                  : tokenURI;
-                console.log(`Falling back to direct image for tokenId ${tokenIdStr}: ${imageUrl}`);
-              }
-            } catch (e) {
-              console.error(`Error using tokenURI as direct image for tokenId ${tokenIdStr}:`, e);
+            console.error(`Error mengambil metadata untuk tokenId ${tokenIdStr}:`, e);
+            if (tokenURI.startsWith("http") || tokenURI.startsWith("ipfs://")) {
+              imageUrl = tokenURI.startsWith("ipfs://")
+                ? tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+                : tokenURI;
+              console.log(`Fallback ke gambar langsung untuk tokenId ${tokenIdStr}: ${imageUrl}`);
             }
           }
 
@@ -237,15 +208,15 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
         }
 
         if (items.length === 0 && balanceNum > 0) {
-          setError("No valid NFTs found. Check contract or try again.");
-          console.warn(`No valid NFTs found for ${balanceNum} balance`);
+          setError("Tidak ada NFT valid ditemukan. Cek kontrak atau coba lagi.");
+          console.warn(`Tidak ada NFT valid ditemukan untuk balance ${balanceNum}`);
         } else {
           setNfts(items);
-          console.log(`Successfully fetched ${items.length} NFTs`);
+          console.log(`Berhasil mengambil ${items.length} NFT`);
         }
       } catch (error: any) {
         console.error("Fetch NFTs error:", error);
-        setError(`Failed to load collection: ${error.message || "Unknown error"}`);
+        setError(`Gagal memuat koleksi: ${error.message || "Error tidak diketahui"}`);
       } finally {
         setLoading(false);
       }
@@ -254,7 +225,6 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
     fetchNFTs();
   }, [address, balance, publicClient, chain, balanceError]);
 
-  // Jika show=false, tampilkan tombol untuk set show=true
   if (!show) {
     return (
       <button
@@ -266,7 +236,6 @@ export default function CollectionViewer({ show, setShow }: CollectionViewerProp
     );
   }
 
-  // Konten asli jika show=true
   if (loading) {
     return <p className="text-foreground">Loading your collection...</p>;
   }

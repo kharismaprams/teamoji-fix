@@ -5,16 +5,22 @@ import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Hero from '@/components/sections/Hero';
+import About from '@/components/sections/About'; // Import About
 import HowItWorks from '@/components/sections/HowItWorks';
 import FAQs from '@/components/sections/FAQs';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function Home() {
-  // Toast untuk welcome message
   useEffect(() => {
     toast.success('Welcome to TEAMOJI! 🎉 Mint your favorite emoji NFTs now!');
   }, []);
+
+  const [isFooterOpen, setIsFooterOpen] = useState(false);
+
+  const toggleFooter = () => {
+    setIsFooterOpen(!isFooterOpen);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -24,25 +30,8 @@ export default function Home() {
       {/* Hero Section */}
       <Hero />
 
-      {/* Intro Section */}
-      <section className="py-12 bg-navy-900">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold font-poppins mb-6 text-lime-300">
-            What is TEAMOJI? 
-          </h2>
-          <h2 className="text-3xl font-bold font-poppins mb-6 text-lime-300">
-          😂 ❤️ 😍 🤣 😊 🙏 🥰 😎 💔 😭 
-          </h2>
-          <p className="text-lg max-w-3xl mx-auto mb-8 text-gray-200">
-            TEAMOJI is a decentralized platform on Tea Sepolia Testnet where you can mint, collect, and manage unique emoji NFTs. Support your favorite emojis, earn rewards, and join a vibrant community of collectors!
-          </p>
-          <Link href="/mint">
-            <Button className="btn-primary bg-cyan-400 text-navy-950 hover:bg-lime-300">
-              Rady To Mint? 🇱‌🇫‌🇬‌ 💥
-            </Button>
-          </Link>
-        </div>
-      </section>
+      {/* Intro Section (Pakai Komponen About) */}
+      <About />
 
       {/* Project Details Section */}
       <section className="py-12 bg-background">
@@ -110,7 +99,7 @@ export default function Home() {
       <HowItWorks />
 
       {/* Supported Categories Section */}
-      <section className="py-12 bg-navy-900">
+      <section className="py-12 bg-background">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold font-poppins mb-6 text-lime-300">
             Supported Emoji Categories📚
@@ -129,7 +118,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 bg-background">
+      <section className="py-12 bg-navy-900">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold font-poppins mb-6 text-lime-300">
             Why TEAMOJI?🤔
@@ -195,18 +184,145 @@ export default function Home() {
       <FAQs />
 
       {/* Footer */}
-      <footer className="bg-navy-950 py-6 border-t-2 border-cyan-400">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-gray-400 mb-2">© TEAMOJI Association. Diode Labs - @KharismaPramS 2025.</p>
-          <div className="flex justify-center gap-4">
-            <Link href="#terms" className="text-lime-300 hover:underline">Terms of Use</Link>
-            <Link href="#privacy" className="text-lime-300 hover:underline">Privacy Policy</Link>
-            <Link href="#sitemap" className="text-lime-300 hover:underline">Sitemap</Link>
-            <Link href="#learn" className="text-lime-300 hover:underline">Learn About TEAMOJI</Link>
-            <p className="text-gray-400 mb-2">🪡 Follow Us:</p>
-            <Link href="https://x.com/themojinft" className="text-lime-300 hover:underline">Twitter / 𝕏 🐦</Link>
-            <Link href="https://discord.gg/BEnevQJgA6" className="text-lime-300 hover:underline">Discord 👣</Link>
-            <Link href="https://x.com/KharismaPramS" className="text-lime-300 hover:underline">𝕏 @KharismaPramS 👷‍♂️</Link>
+      <footer className="animate-footer-gradient py-4 sm:py-6 border-t-2 border-cyan-400">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
+          <p className="text-gray-400 text-sm text-center sm:hidden mb-2">
+            © TEAMOJI Association. Diode Labs - @KharismaPramS 2025.
+          </p>
+          <button
+            className="sm:hidden text-lime-300 text-sm mb-4 flex items-center justify-center gap-2 mx-auto hover:bg-cyan-400 hover:text-navy-950 rounded-lg px-3 py-2 transition-all duration-300 neon-glow"
+            onClick={toggleFooter}
+            aria-label={isFooterOpen ? 'Hide Links' : 'Show Links'}
+          >
+            {isFooterOpen ? 'Hide Links' : 'Show Links'}
+            <span className={`transition-transform duration-300 ${isFooterOpen ? 'rotate-180' : ''}`}>
+              ▼
+            </span>
+          </button>
+          <div
+            className={`${
+              isFooterOpen ? 'flex' : 'hidden'
+            } sm:flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 transition-all duration-300 text-sm`}
+          >
+            {/* Copyright + Banner */}
+            <div className="flex flex-col items-center sm:items-start gap-2">
+              <img
+                src="/ui/teamoji-banner.png"
+                alt="TEAMOJI Banner"
+                className="h-10 sm:h-12"
+              />
+              <p className="text-gray-400 hidden sm:block">
+                © TEAMOJI Association. Diode Labs - @KharismaPramS 2025.
+              </p>
+            </div>
+
+            {/* Legal Links + Disclaimer + Follow Us */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center gap-2 sm:gap-4">
+                <Link
+                  href="https://tea.xyz/terms-of-use"
+                  className="text-lime-300 hover:bg-cyan-400 hover:text-navy-950 hover:underline px-3 py-1 rounded transition-all duration-300 neon-glow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms of Use
+                </Link>
+                <Link
+                  href="https://tea.xyz/privacy-policy"
+                  className="text-lime-300 hover:bg-cyan-400 hover:text-navy-950 hover:underline px-3 py-1 rounded transition-all duration-300 neon-glow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Policy
+                </Link>
+                <Link
+                  href="https://tea.xyz/sitemap"
+                  className="text-lime-300 hover:bg-cyan-400 hover:text-navy-950 hover:underline px-3 py-1 rounded transition-all duration-300 neon-glow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Sitemap
+                </Link>
+                <Link
+                  href="https://docs.tea.xyz/tea"
+                  className="text-lime-300 hover:bg-cyan-400 hover:text-navy-950 hover:underline px-3 py-1 rounded transition-all duration-300 neon-glow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Learn About TEAMOJI
+                </Link>
+              </div>
+              <p className="text-gray-400 text-xs text-center">
+                This website is for informational purposes only. Acquiring TEAMOJI tokens involves high risks; purchase only if prepared to lose the entire amount.
+              </p>
+              <div className="flex flex-col sm:flex-row flex-wrap items-center gap-1 sm:gap-1.5">
+                <span className="text-gray-400 sm:mr-1">🤝 Follow us:</span>
+                <Link
+                  href="https://x.com/KharismaPramS"
+                  className="text-lime-300 hover:bg-cyan-400 hover:text-navy-950 hover:underline px-3 py-1 rounded transition-all duration-300 neon-glow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  𝕏 @KharismaPrams 👷‍♂️
+                </Link>
+                <Link
+                  href="https://instagram.com/galleryjohana"
+                  className="text-lime-300 hover:bg-cyan-400 hover:text-navy-950 hover:underline px-3 py-1 rounded transition-all duration-300 neon-glow"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  🅾 @JohanahPrams 💐
+                </Link>
+              </div>
+            </div>
+
+            {/* Support Text + Social Media Links */}
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-gray-200 text-sm text-center">
+                Have questions or need assistance? Connect with us—we're here to help⛑️
+              </p>
+              <div className="flex items-center gap-4">
+                <Link
+                  href="https://x.com/themojinft"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link"
+                  aria-label="Follow us on X"
+                >
+                  <img
+                    src="/x.svg"
+                    alt="X Logo"
+                    className="w-8 h-8 sm:w-10 sm:h-10 hover:scale-110 transition-all duration-300 neon-glow-social"
+                  />
+                </Link>
+                <Link
+                  href="https://discord.gg/BEnevQJgA6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link"
+                  aria-label="Join our Discord"
+                >
+                  <img
+                    src="/discord.svg"
+                    alt="Discord Logo"
+                    className="w-8 h-8 sm:w-10 sm:h-10 hover:scale-110 transition-all duration-300 neon-glow-social"
+                  />
+                </Link>
+                <Link
+                  href="https://t.me/teamoji"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-icon-link"
+                  aria-label="Join our Telegram"
+                >
+                  <img
+                    src="/telegram.svg"
+                    alt="Telegram Logo"
+                    className="w-8 h-8 sm:w-10 sm:h-10 hover:scale-110 transition-all duration-300 neon-glow-social"
+                  />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </footer>

@@ -36,11 +36,9 @@ export const NFTCollection = ({
   itemsPerPage,
   fetchCollection,
 }: NFTCollectionProps) => {
-  // Ambil daftar kategori unik dari collection
   const categories = Array.from(new Set(collection.map(item => item.category || "Unknown")));
   categories.unshift("All");
 
-  // Filter dan sort collection
   const filteredCollection = filterCategory === "All"
     ? [...collection]
     : collection.filter(item => (item.category || "Unknown") === filterCategory);
@@ -62,12 +60,12 @@ export const NFTCollection = ({
   );
 
   return (
-    <div>
+    <div className="animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h3 className="text-2xl font-semibold text-foreground">Your Collection🎨</h3>
         <div className="flex items-center gap-4">
           <select
-            className="bg-card text-muted-foreground border-2 border-border rounded-lg p-2"
+            className="bg-card text-muted-foreground border-2 border-lime-300 rounded-lg p-2 filter-neon"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as "tokenId" | "name" | "category")}
           >
@@ -91,7 +89,7 @@ export const NFTCollection = ({
               filterCategory === category
                 ? "bg-lime-400 text-navy-900"
                 : "bg-navy-800 text-foreground border-2 border-lime-300"
-            } px-4 py-2 rounded-lg hover:bg-lime-300 hover:text-navy-900 transition`}
+            } px-4 py-2 rounded-lg hover:bg-lime-300 hover:text-navy-900 transition filter-neon`}
           >
             {category}
           </Button>
@@ -105,7 +103,7 @@ export const NFTCollection = ({
       ) : error ? (
         <div className="text-center">
           <p className="text-destructive mb-4">{error}</p>
-          <Button onClick={fetchCollection} className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4">
+          <Button onClick={fetchCollection} className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4 filter-neon">
             Retry
           </Button>
         </div>
@@ -117,12 +115,12 @@ export const NFTCollection = ({
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {paginatedCollection.map((item) => (
-              <Card key={item.tokenId.toString()} className="card animate-slide-up">
+              <Card key={item.tokenId.toString()} className="card animate-slide-up card-neon">
                 <CardContent className="flex flex-col items-center pt-6">
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-48 object-cover rounded-md mb-4"
+                    className="w-full h-48 object-cover rounded-md mb-4 card-neon"
                     onError={(e) => (e.currentTarget.src = "/emojis/placeholder.svg")}
                   />
                   <h3 className="text-lg font-semibold text-yellow-400 text-center">{item.name}</h3>
@@ -144,17 +142,17 @@ export const NFTCollection = ({
               <Button
                 onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                 disabled={currentPage === 1}
-                className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4"
+                className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4 filter-neon"
               >
                 ◀️Previous
               </Button>
-              <span className="text-foreground font-semibold bg-navy-800 px-4 py-2 rounded-lg border-2 border-lime-300">
+              <span className="text-foreground font-semibold bg-navy-800 px-4 py-2 rounded-lg border-2 border-lime-300 filter-neon">
                 Page {currentPage} of {totalPages}
               </span>
               <Button
                 onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4"
+                className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition ring-2 ring-lime-300 focus:ring-4 filter-neon"
               >
                 Next▶️
               </Button>

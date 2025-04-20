@@ -42,7 +42,7 @@ export default function ProfilePage() {
     isFuser,
     isSeasonal,
     isPricer,
-    fetchCollection, // Sekarang tersedia dari hook
+    fetchCollection,
   } = useProfileState();
 
   const roles = [
@@ -62,7 +62,7 @@ export default function ProfilePage() {
 
   const handleFetchCollection = () => {
     setError(null);
-    fetchCollection(); // Sekarang bisa dipanggil
+    fetchCollection();
   };
 
   if (!isMounted) {
@@ -72,7 +72,7 @@ export default function ProfilePage() {
   return (
     <>
       <Header />
-      <section className="py-12 bg-gradient-to-b from-navy-950 to-navy-900 min-h-screen">
+      <section className="py-12 bg-gradient-to-b from-navy-950 to-navy-900 min-h-screen animate-fade-in">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {address ? (
             <>
@@ -111,16 +111,16 @@ export default function ProfilePage() {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 itemsPerPage={itemsPerPage}
-                fetchCollection={handleFetchCollection} // Ubah nama untuk konsistensi
+                fetchCollection={handleFetchCollection}
               />
             </>
           ) : (
-            <div className="text-center">
+            <div className="text-center animate-fade-in">
               <p className="text-lg text-muted-foreground mb-4">
                 Please connect your wallet to view your profile.
               </p>
-              <Button className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition">
-                Connect Wallet
+              <Button className="btn-primary border-2 border-lime-300 hover:bg-lime-300 hover:text-navy-900 transition filter-neon">
+              ⚠️Connect Your Wallet⚠️
               </Button>
             </div>
           )}
