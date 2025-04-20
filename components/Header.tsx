@@ -42,17 +42,17 @@ export default function Header() {
             aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           >
             <span
-              className={`w-6 h-0.5 bg-white transition-transform duration-300 ${
+              className={`w-6 h-0.5 bg-lime-300 shadow-lg shadow-cyan-400/50 transition-transform duration-300 ${
                 isMenuOpen ? 'rotate-45 translate-y-2' : ''
               }`}
             ></span>
             <span
-              className={`w-6 h-0.5 bg-white transition-opacity duration-300 ${
+              className={`w-6 h-0.5 bg-lime-300 shadow-lg shadow-cyan-400/50 transition-opacity duration-300 ${
                 isMenuOpen ? 'opacity-0' : ''
               }`}
             ></span>
             <span
-              className={`w-6 h-0.5 bg-white transition-transform duration-300 ${
+              className={`w-6 h-0.5 bg-lime-300 shadow-lg shadow-cyan-400/50 transition-transform duration-300 ${
                 isMenuOpen ? '-rotate-45 -translate-y-2' : ''
               }`}
             ></span>
