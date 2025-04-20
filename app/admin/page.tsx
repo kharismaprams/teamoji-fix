@@ -1,4 +1,3 @@
-// ✅ page.tsx
 "use client";
 
 import { useState, useEffect, Fragment } from "react";
@@ -14,6 +13,7 @@ import CollectionViewer from "@/components/admin/CollectionViewer";
 import WriteFunctionModal from "@/components/admin/WriteFunctionModal";
 import ReadFunctionModal from "@/components/admin/ReadFunctionModal";
 import { DEFAULT_ADMIN_ROLE } from "@/lib/roles";
+import { web3Modal } from "@/lib/web3modal-config"; // Tambah import web3Modal
 
 const readFunctions = [
   { id: "AIRDROP_ROLE", name: "Airdrop Role" },
@@ -70,7 +70,12 @@ export default function AdminDashboard() {
         <p className="text-lg text-muted-foreground mb-4">
           Please connect your wallet to access the admin panel. 👻
         </p>
-        <Button className="btn-primary">🤖 ?????? Go, please. 🥷🏼</Button>
+        <Button
+          onClick={() => web3Modal.open()} // Tambah onClick handler
+          className="text-sm sm:text-base px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-lime-400 text-navy-950 font-semibold hover:from-cyan-600 hover:to-lime-500 transition-all duration-300 shadow-lg shadow-cyan-400/50 hover:shadow-cyan-400/70"
+        >
+          🤖 NOT A PLAYZONE 🥷🏼
+        </Button>
       </div>
     );
   }

@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useAccount, useReadContract, useWriteContract } from "wagmi";
 import { teamojiAbi } from "@/lib/contract";
-import ConnectWallet from "@/components/connect-wallet";
 import Papa from "papaparse";
 import Link from "next/link";
 import Header from "@/components/Header";

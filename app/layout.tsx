@@ -3,13 +3,8 @@ import { Poppins } from "next/font/google";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
-import WagmiWrapper from "@/components/wagmi-provider";
-import "@rainbow-me/rainbowkit/styles.css";
-
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
-
-export const metadata: Metadata = {
-  metadataBase: new URL("https://teamoji.art"), // Ganti dengan URL production saat deploy, misalnya https://teamoji.com
+import WagmiWrapper from "@/components/wagmi-provider";const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });export const metadata: Metadata = {
+  metadataBase: new URL("https://teamoji.art"),
   title: "TEAMOJI - Emoji NFT Collectibles",
   description: "Mint and manage your favorite emoji NFTs on Tea Sepolia Testnet",
   icons: {
@@ -19,7 +14,7 @@ export const metadata: Metadata = {
     title: "TEAMOJI",
     description: "Collect unique emoji NFTs on Tea Sepolia Testnet",
     images: ["/ui/Teamoji Banner.png"],
-    url: "https://teamoji.art", // Ganti dengan URL production
+    url: "https://teamoji.art",
     siteName: "TEAMOJI",
     type: "website",
   },
@@ -28,11 +23,9 @@ export const metadata: Metadata = {
     title: "TEAMOJI",
     description: "Collect unique emoji NFTs on Tea Sepolia Testnet",
     images: ["/ui/Teamoji Banner.png"],
-    creator: "@YKharismaPramS", // Ganti dengan handle Twitter-mu
+    creator: "@KharismaPramS",
   },
-};
-
-export default function RootLayout({
+};export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

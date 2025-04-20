@@ -2,14 +2,31 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import { web3Modal } from '@/lib/web3modal-config';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { address, isConnected } = useAccount();
+  const [clientWallet, setClientWallet] = useState<{
+    address: string | undefined;
+    isConnected: boolean;
+  }>({ address: undefined, isConnected: false });
+
+  // Sinkronkan status wallet di sisi client
+  useEffect(() => {
+    setClientWallet({ address, isConnected });
+    console.log("Wallet status:", { address, isConnected }); // Debug log
+  }, [address, isConnected]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const openModal = () => {
+    console.log("Opening Web3Modal..."); // Debug log
+    web3Modal.open();
   };
 
   return (
@@ -65,106 +82,58 @@ export default function Header() {
           >
             <Link
               href="/"
-              className="nav-button text-sm sm:text-base px-2 py-1 hover:bg-cyan-500 hover:text-navy-950 rounded"
+              className="nav-button text-sm sm:text-base px-2 py-1 border-2 border-cyan-400/30 shadow-md shadow-cyan-400/20 hover:border-cyan-400/70 hover:shadow-cyan-400/70 rounded transition-all duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
               Home🏠
             </Link>
             <Link
               href="/mint"
-              className="nav-button text-sm sm:text-base px-2 py-1 hover:bg-cyan-500 hover:text-navy-950 rounded"
+              className="nav-button text-sm sm:text-base px-2 py-1 border-2 border-cyan-400/30 shadow-md shadow-cyan-400/20 hover:border-cyan-400/70 hover:shadow-cyan-400/70 rounded transition-all duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
               Mint📇
             </Link>
             <Link
               href="/profile"
-              className="nav-button text-sm sm:text-base px-2 py-1 hover:bg-cyan-500 hover:text-navy-950 rounded"
+              className="nav-button text-sm sm:text-base px-2 py-1 border-2 border-cyan-400/30 shadow-md shadow-cyan-400/20 hover:border-cyan-400/70 hover:shadow-cyan-400/70 rounded transition-all duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
               Profile📝
             </Link>
             <Link
               href="/governance"
-              className="nav-button text-sm sm:text-base px-2 py-1 hover:bg-cyan-500 hover:text-navy-950 rounded"
+              className="nav-button text-sm sm:text-base px-2 py-1 border-2 border-cyan-400/30 shadow-md shadow-cyan-400/20 hover:border-cyan-400/70 hover:shadow-cyan-400/70 rounded transition-all duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
               Governance⚖️
             </Link>
             <Link
               href="/admin"
-              className="nav-button text-sm sm:text-base px-2 py-1 hover:bg-cyan-500 hover:text-navy-950 rounded"
+              className="nav-button text-sm sm:text-base px-2 py-1 border-2 border-cyan-400/30 shadow-md shadow-cyan-400/20 hover:border-cyan-400/70 hover:shadow-cyan-400/70 rounded transition-all duration-300"
               onClick={() => setIsMenuOpen(false)}
             >
               👨🏻‍💻
             </Link>
-            <ConnectButton.Custom>
-              {({
-                account,
-                chain,
-                openAccountModal,
-                openConnectModal,
-                authenticationStatus,
-                mounted,
-              }) => {
-                const ready = mounted && authenticationStatus !== 'loading';
-                const connected =
-                  ready &&
-                  account &&
-                  chain &&
-                  (!authenticationStatus || authenticationStatus === 'authenticated');
-
-                return (
-                  <div
-                    {...(!ready && {
-                      'aria-hidden': true,
-                      style: {
-                        opacity: 0,
-                        pointerEvents: 'none',
-                        userSelect: 'none',
-                      },
-                    })}
-                  >
-                    {(() => {
-                      if (!connected) {
-                        return (
-                          <button
-                            onClick={openConnectModal}
-                            type="button"
-                            className="btn-primary text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 rounded w-full sm:w-auto"
-                          >
-                            Connect Wallet
-                          </button>
-                        );
-                      }
-
-                      if (chain.unsupported) {
-                        return (
-                          <button
-                            onClick={openConnectModal}
-                            type="button"
-                            className="btn-primary text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 rounded w-full sm:w-auto"
-                          >
-                            Wrong network
-                          </button>
-                        );
-                      }
-
-                      return (
-                        <button
-                          onClick={openAccountModal}
-                          type="button"
-                          className="btn-primary text-sm sm:text-base px-3 py-1 sm:px-4 sm:py-2 rounded w-full sm:w-auto"
-                        >
-                          {account.displayName}
-                          {account.displayBalance ? ` (${account.displayBalance})` : ''}
-                        </button>
-                      );
-                    })()}
-                  </div>
-                );
-              }}
-            </ConnectButton.Custom>
+            <div>
+              {clientWallet.isConnected ? (
+                <button
+                  onClick={openModal}
+                  type="button"
+                  className="text-sm sm:text-base px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-lime-300 text-navy-950 font-semibold hover:from-cyan-300 hover:to-lime-400 transition-all duration-300 shadow-lg shadow-cyan-400/50 hover:shadow-cyan-400/70 w-full sm:w-auto"
+                >
+                  {clientWallet.address?.slice(0, 6)}...{clientWallet.address?.slice(-4)}
+                </button>
+              ) : (
+                <button
+                  onClick={openModal}
+                  type="button"
+                  className="text-sm sm:text-base px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-lime-300 text-navy-950 font-semibold hover:from-cyan-300 hover:to-lime-400 transition-all duration-300 shadow-lg shadow-cyan-400/50 hover:shadow-cyan-400/70 w-full sm:w-auto"
+                >
+                  Connect Wallet
+                </button>
+              )}
+            </div>
           </nav>
         </div>
       </div>

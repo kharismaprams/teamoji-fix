@@ -17,3 +17,6 @@ export const teaSepolia: Chain = {
   },
   testnet: true,
 };
+
+// ⬅️ Tambahin ini ya!
+export const chains = [teaSepolia] as const;

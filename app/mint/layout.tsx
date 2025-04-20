@@ -1,6 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Header from '@/components/Header'; // Tambah import Header
 
 export default function MintLayout({
   children,
@@ -9,7 +11,7 @@ export default function MintLayout({
 }) {
   return (
     <>
-      
+      <Header /> {/* Tambah Header */}
       <main>{children}</main>
     </>
   );
