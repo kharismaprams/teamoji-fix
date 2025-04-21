@@ -1,8 +1,16 @@
 {
-  "name": "teamoji-frontend",
+  "name": "teamoji-apps",
   "version": "1.0.0",
-  "private": true,
+  "description": "A project for minting TEAMOJI NFTs on Tea Sepolia",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kharismaprams/teamoji-fix.git"
+  },
+  "homepage": "https://teamoji.vercel.app",
+  "bugs": {
+    "url": "https://github.com/kharismaprams/teamoji-fix/issues"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
